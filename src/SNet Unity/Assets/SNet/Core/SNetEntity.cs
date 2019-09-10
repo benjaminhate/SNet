@@ -1,6 +1,4 @@
-using System.Reflection;
 using SNet.Core.Models.Router;
-using SNet.Core.Plugins.ENet.Scripts;
 using UnityEngine;
 
 namespace SNet.Core
@@ -13,7 +11,7 @@ namespace SNet.Core
         public bool IsClient => SNetManager.IsClientActive;
 
         protected SNetManager SNetManager;
-        
+
         protected void Start()
         {
             SNetManager = SNetManager.Instance;
@@ -22,13 +20,28 @@ namespace SNet.Core
             // Get identity from registration
         }
 
+        #region SERVER STUFF
+
+        public abstract void OnServerReceive(byte[] data);
+
+        public abstract void ServerSend(object target, object data);
+
         public abstract void ServerBroadcast(object data);
 
-        public void ServerBroadcastSerializable(ISNetSerialization serialization)
+        public void ServerBroadcastSerializable(byte[] data)
         {
-            NetworkRouter.Send(ChannelType.Base, HeaderType.Base, serialization.Serialize()); // TODO change to NetworkRouter.Send(identity.Id, data);
+            NetworkRouter.Send(ChannelType.Base, HeaderType.Base, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
-        public abstract void OnReceive(byte[] data);
+        #endregion
+
+        #region CLIENT STUFF
+
+        public abstract void OnClientReceive(byte[] data);
+
+
+        public abstract void ClientSend(object data);
+
+        #endregion
     }
 }
