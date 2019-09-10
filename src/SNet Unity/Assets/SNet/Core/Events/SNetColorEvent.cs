@@ -6,7 +6,7 @@ namespace SNet.Core.Events
 {
     [Serializable] public class ColorEvent : UnityEvent<Color>{ }
     
-    public class SNetColorEvent : SNetEvent<Color>
+    public class SNetColorEvent : SNetEvent<Color, SNetSerializableColor>
     {
         public new ColorEvent clientRecieveCallback;
         

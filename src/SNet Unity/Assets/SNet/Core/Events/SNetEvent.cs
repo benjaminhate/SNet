@@ -4,12 +4,12 @@ using UnityEngine.Events;
 
 namespace SNet.Core.Events
 {
-    public class SNetEvent<T> : SNetEntity
+    public class SNetEvent<TObj, TSerializableObj> : SNetEntity where TSerializableObj : ISNetSerialization, ISNetConvertible<TObj>, new()
     {
         public UnityEvent<T> clientRecieveCallback;
         public UnityEvent<T> serverRecieveCallback;
         
-        protected new void Start()
+        protected new void Awake()
         {
             if (IsClient && clientRecieveCallback != null)
             {
@@ -21,17 +21,20 @@ namespace SNet.Core.Events
             {
                 // TODO Change to NetworkRouter.RegisterServerCallback(identity.Id, serverEventCallbacks);
             }
-            base.Start();
         }
 
         public override void ServerBroadcast(object data)
         {
-            throw new NotImplementedException();
+            var obj = (TObj) data;
+            var serializable = (TSerializableObj) new TSerializableObj().ConvertFrom(obj);
+            ServerBroadcastSerializable(serializable);
         }
 
         public override void OnServerReceive(byte[] data)
         {
-            throw new NotImplementedException();
+            var serializable = (TSerializableObj) data;
+            var obj = serializable.ConvertTo();
+            clientEventCallbacks?.Invoke(obj);
         }
 
         public override void ServerSend(object target, object data)

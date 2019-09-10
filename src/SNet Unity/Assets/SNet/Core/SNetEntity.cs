@@ -11,12 +11,12 @@ namespace SNet.Core
         public bool IsClient => SNetManager.IsClientActive;
 
         protected SNetManager SNetManager;
-
-        protected void Start()
+        
+        protected void Awake()
         {
             SNetManager = SNetManager.Instance;
             // TODO Self Registration
-            IsLocalClient = true; // Get value from SNetManager
+            // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
         }
 
@@ -27,6 +27,7 @@ namespace SNet.Core
         public abstract void ServerSend(object target, object data);
 
         public abstract void ServerBroadcast(object data);
+        public abstract void OnReceive(object data);
 
         public void ServerBroadcastSerializable(byte[] data)
         {

@@ -1,5 +1,6 @@
 using SNet.Core.Common;
 using SNet.Core.Models.Network;
+using SNet.Core.Models.Router;
 using UnityEngine;
 
 namespace SNet.Core
@@ -22,8 +23,8 @@ namespace SNet.Core
         public ClientNetwork Client { get; private set; }
         public ServerNetwork Server { get; private set; }
 
-        public bool IsServerActive => _isServer && Server.IsActive;
-        public bool IsClientActive => _isClient && Client.IsActive;
+        public bool IsServerActive => _isServer &&  Server != null && Server.IsActive;
+        public bool IsClientActive => _isClient && Client != null && Client.IsActive;
 
         public string NetworkAddress => networkAddress;
         public ushort NetworkPort => networkPort;
@@ -63,7 +64,7 @@ namespace SNet.Core
             Client = new ClientNetwork();
             
             Client.OnConnect += data => Debug.Log($"Connected to server {data.PeerId}");
-
+            
             Client.Create();
             
             if(connectClientOnStart)
@@ -87,6 +88,9 @@ namespace SNet.Core
             Server.OnDisconnect += ServerOnClientDisconnect;
             Server.OnTimeout += ServerOnClientTimeout;
             Server.OnReceive += ServerOnClientReceive;
+
+            NetworkRouter.Instance.BroadcastToNetwork += Server.Broadcast;
+            NetworkRouter.Instance.SendToNetwork += Server.Send;
             
             Server.Listen(networkAddress, networkPort, maxConnections, maxChannels);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using SNet.Core.Common.Serializer;
 using SNet.Core.Plugins.ENet.Scripts;
+using UnityEngine;
 
 namespace SNet.Core.Models.Router
 {
@@ -118,7 +119,7 @@ namespace SNet.Core.Models.Router
         private void PeerReceiveData(uint peerId, byte channelId, byte[] data)
         {
             _wrapper.CreatePayload(data);
-//            Debug.Log($"Message from channel {channelId} and header {Wrapper.Header}");
+            Debug.Log($"Message from channel {channelId} and header {_wrapper.Header}");
             Publish(peerId, channelId, _wrapper.Header, _wrapper.Payload);
         }
 
