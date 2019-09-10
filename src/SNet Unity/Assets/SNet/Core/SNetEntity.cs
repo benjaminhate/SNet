@@ -38,9 +38,10 @@ namespace SNet.Core
         #region CLIENT STUFF
 
         public abstract void OnClientReceive(byte[] data);
-
-
+        
         public abstract void ClientSend(byte[] data);
+
+        public abstract void InternalClientReceive(byte[] array);
 
         #endregion
     }

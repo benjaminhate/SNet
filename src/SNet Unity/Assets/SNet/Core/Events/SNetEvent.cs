@@ -8,13 +8,14 @@ namespace SNet.Core.Events
     {
         public UnityEvent<T> clientReceiveCallback;
         public UnityEvent<T> serverReceiveCallback;
-        
+
         protected new void Awake()
         {
             if (IsClient && clientReceiveCallback != null)
             {
                 // TODO Change to NetworkRouter.RegisterClientCallback(identity.Id, clientEventCallbacks);
                 NetworkRouter.Register(ChannelType.Base, HeaderType.Base, ((id, value) => clientReceiveCallback?.Invoke((T)value)), typeof(T));
+                //NetworkRouter.Register(ChannelType.Base, HeaderType.Base, (value) => InternalClientReceive?.Invoke(value));
             }
 
             if (IsServer && serverReceiveCallback != null)
@@ -48,6 +49,11 @@ namespace SNet.Core.Events
         }
 
         public override void ClientSend(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void InternalClientReceive(byte[] array)
         {
             throw new NotImplementedException();
         }
