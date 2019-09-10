@@ -24,10 +24,9 @@ namespace SNet.Core
 
         public abstract void OnServerReceive(byte[] data);
 
-        public abstract void ServerSend(object target, object data);
+        public abstract void ServerSend(object target, byte[] data);
 
-        public abstract void ServerBroadcast(object data);
-        public abstract void OnReceive(object data);
+        public abstract void ServerBroadcast(byte[] data);
 
         public void ServerBroadcastSerializable(byte[] data)
         {
@@ -41,7 +40,7 @@ namespace SNet.Core
         public abstract void OnClientReceive(byte[] data);
 
 
-        public abstract void ClientSend(object data);
+        public abstract void ClientSend(byte[] data);
 
         #endregion
     }

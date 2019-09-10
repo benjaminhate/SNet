@@ -6,20 +6,29 @@ namespace SNet.Core.Events
 {
     [Serializable] public class ColorEvent : UnityEvent<Color>{ }
     
-    public class SNetColorEvent : SNetEvent<Color, SNetSerializableColor>
+    public class SNetColorEvent : SNetEvent<Color>
     {
-        public new ColorEvent clientRecieveCallback;
-        
-        public new void ServerBroadcast(object color)
+        public new ColorEvent clientReceiveCallback;
+
+        public void Start()
         {
-            var arr = SNetColorSerializer.Serialize((Color)color);
+            //// Register du OnClientReceive en fonction du contexte ?
+            //if(isCLient && clientReceiveCallback != null)
+            //{
+            //    base.OnClientReceive += HandleClientReceive;
+            //}
+        }
+
+        public void ServerBroadcast(Color color)
+        {
+            var arr = SNetColorSerializer.Serialize(color);
             ServerBroadcastSerializable(arr);
         }
 
-        public new void OnClientReceive(byte[] arr)
+        private void HandleClientReceive(byte[] arr)
         {
             var color = SNetColorSerializer.Deserialize(arr);
-            clientRecieveCallback?.Invoke(color);
+            clientReceiveCallback?.Invoke(color);
         }
     }
 }

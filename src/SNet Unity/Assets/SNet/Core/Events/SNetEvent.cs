@@ -4,40 +4,40 @@ using UnityEngine.Events;
 
 namespace SNet.Core.Events
 {
-    public class SNetEvent<TObj, TSerializableObj> : SNetEntity where TSerializableObj : ISNetSerialization, ISNetConvertible<TObj>, new()
+    public class SNetEvent<T> : SNetEntity
     {
-        public UnityEvent<T> clientRecieveCallback;
-        public UnityEvent<T> serverRecieveCallback;
+        public UnityEvent<T> clientReceiveCallback;
+        public UnityEvent<T> serverReceiveCallback;
         
         protected new void Awake()
         {
-            if (IsClient && clientRecieveCallback != null)
+            if (IsClient && clientReceiveCallback != null)
             {
                 // TODO Change to NetworkRouter.RegisterClientCallback(identity.Id, clientEventCallbacks);
-                NetworkRouter.Register(ChannelType.Base, HeaderType.Base, ((id, value) => clientRecieveCallback?.Invoke((T)value)), typeof(T));
+                NetworkRouter.Register(ChannelType.Base, HeaderType.Base, ((id, value) => clientReceiveCallback?.Invoke((T)value)), typeof(T));
             }
 
-            if (IsServer && serverRecieveCallback != null)
+            if (IsServer && serverReceiveCallback != null)
             {
                 // TODO Change to NetworkRouter.RegisterServerCallback(identity.Id, serverEventCallbacks);
             }
         }
 
-        public override void ServerBroadcast(object data)
+        public override void ServerBroadcast(byte[] data)
         {
-            var obj = (TObj) data;
-            var serializable = (TSerializableObj) new TSerializableObj().ConvertFrom(obj);
-            ServerBroadcastSerializable(serializable);
+            //var obj = (TObj) data;
+            //var serializable = (TSerializableObj) new TSerializableObj().ConvertFrom(obj);
+            //ServerBroadcastSerializable(serializable);
         }
 
         public override void OnServerReceive(byte[] data)
         {
-            var serializable = (TSerializableObj) data;
-            var obj = serializable.ConvertTo();
-            clientEventCallbacks?.Invoke(obj);
+            //var serializable = (TSerializableObj) data;
+            //var obj = serializable.ConvertTo();
+            //clientEventCallbacks?.Invoke(obj);
         }
 
-        public override void ServerSend(object target, object data)
+        public override void ServerSend(object target, byte[] data)
         {
             throw new NotImplementedException();
         }
@@ -47,7 +47,7 @@ namespace SNet.Core.Events
             throw new NotImplementedException();
         }
 
-        public override void ClientSend(object data)
+        public override void ClientSend(byte[] data)
         {
             throw new NotImplementedException();
         }
