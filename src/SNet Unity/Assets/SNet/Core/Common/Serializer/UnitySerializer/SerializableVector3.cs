@@ -45,7 +45,7 @@ namespace SNet.Core.Common.Serializer.UnitySerializer
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("[{0}, {1}, {2}]", x, y, z);
+            return $"[{x}, {y}, {z}]";
         }
 
         /// <summary>

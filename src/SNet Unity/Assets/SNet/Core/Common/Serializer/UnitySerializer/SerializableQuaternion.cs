@@ -52,7 +52,7 @@ namespace SNet.Core.Common.Serializer.UnitySerializer
         /// <returns></returns>
         public override string ToString()
         {
-            return String.Format("[{0}, {1}, {2}, {3}]", x, y, z, w);
+            return $"[{x}, {y}, {z}, {w}]";
         }
 
         /// <summary>

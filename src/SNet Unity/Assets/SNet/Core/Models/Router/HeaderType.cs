@@ -1,16 +1,18 @@
-﻿namespace SNet.Core.Models.Router
+﻿using SNet.Core.Common;
+
+namespace SNet.Core.Models.Router
 {
-    // Limited to 256 [0...255]
-    // Is converted as byte
-    public enum HeaderType
+    public partial class HeaderType : Enumeration 
     {
-        None,
-        Ack,
-        Inputs,
-        WorldSnapshot,
-        ModeUpdate,
-        ModeTimer,
-        GameLoaded,
-        ServerStartup
+        public static HeaderType Base = new HeaderType(0, "Base");
+        
+        public HeaderType(int id, string name) : base(id, name)
+        {
+        }
+        
+        public static implicit operator byte(HeaderType type)
+        {
+            return (byte) type.Value;
+        }
     }
 }

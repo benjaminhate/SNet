@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SNet.Core.Common.Extensions
@@ -16,14 +17,7 @@ namespace SNet.Core.Common.Extensions
         public static T GetComponentInChildWithTag<T>(this GameObject parent, string tag) where T:Component
         {
             var t = parent.transform;
-            foreach(Transform tr in t)
-            {
-                if(tr.CompareTag(tag))
-                {
-                    return tr.GetComponent<T>();
-                }
-            }
-            return null;
+            return (from Transform tr in t where tr.CompareTag(tag) select tr.GetComponent<T>()).FirstOrDefault();
         }
         
         /// <summary>
@@ -37,15 +31,7 @@ namespace SNet.Core.Common.Extensions
         public static List<T> GetComponentsInChildrenWithTag<T>(this GameObject parent, string tag) where T:Component
         {
             var t = parent.transform;
-            var l = new List<T>();
-            foreach(Transform tr in t)
-            {
-                if(tr.CompareTag(tag))
-                {
-                    l.Add(tr.GetComponent<T>());
-                }
-            }
-            return l;
+            return (from Transform tr in t where tr.CompareTag(tag) select tr.GetComponent<T>()).ToList();
         }
         
         /// <summary>
@@ -57,16 +43,8 @@ namespace SNet.Core.Common.Extensions
         public static GameObject GetChildWithTag(this GameObject parent, string tag)
         {
             var t = parent.transform;
-            
-            foreach(Transform tr in t)
-            {
-                if(tr.CompareTag(tag))
-                {
-                    return tr.gameObject;
-                }
-            }
 
-            return null;
+            return (from Transform tr in t where tr.CompareTag(tag) select tr.gameObject).FirstOrDefault();
         }
 
         /// <summary>
@@ -78,17 +56,8 @@ namespace SNet.Core.Common.Extensions
         public static List<GameObject> GetChildrenWithTag(this GameObject parent, string tag)
         {
             var t = parent.transform;
-            var l = new List<GameObject>();
-            
-            foreach(Transform tr in t)
-            {
-                if(tr.CompareTag(tag))
-                {
-                    l.Add(tr.gameObject);
-                }
-            }
 
-            return l;
+            return (from Transform tr in t where tr.CompareTag(tag) select tr.gameObject).ToList();
         }
 
         public static void ChildrenSetActive(this GameObject parent, bool enabled)

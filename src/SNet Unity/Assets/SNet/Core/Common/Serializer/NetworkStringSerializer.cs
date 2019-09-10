@@ -15,7 +15,7 @@ namespace SNet.Core.Common.Serializer
 
             if (str == null) str = "null";
             
-            char[] cArr = str.ToCharArray();
+            var cArr = str.ToCharArray();
             var length = cArr.Length;
             list.AddRange(GetBytes(length));
             for (var j = 0; j < length; j++)

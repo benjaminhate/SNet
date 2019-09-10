@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace SNet.Core.Common.Serializer
 {
@@ -16,7 +15,7 @@ namespace SNet.Core.Common.Serializer
         {
             var list = new List<byte>();
 
-            IEnumerable<FieldInfo> infos = GetInfos<T>();
+            var infos = GetInfos<T>();
 
             // Loop on fields
             foreach (var info in infos)
@@ -67,7 +66,7 @@ namespace SNet.Core.Common.Serializer
                 obj = Convert.ChangeType(constructor.Invoke(null), type);
             }
 
-            IEnumerable<FieldInfo> infos = GetInfos(type);
+            var infos = GetInfos(type);
 
             foreach (var info in infos)
             {
