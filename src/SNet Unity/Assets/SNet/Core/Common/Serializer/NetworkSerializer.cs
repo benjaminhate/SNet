@@ -21,6 +21,14 @@ namespace SNet.Core.Common.Serializer
             return GetInfos(typeof(T), moreFlags);
         }
 
+        /// <summary>
+        /// Get the field infos from a specific type
+        /// The default flags are : Public Static NonPublic Instance
+        /// You can add more flags with the parameter moreFlags
+        /// </summary>
+        /// <param name="type">The type to search for</param>
+        /// <param name="moreFlags">Flags to add to the search</param>
+        /// <returns>A list of FieldInfo about the type given</returns>
         protected static IEnumerable<FieldInfo> GetInfos(Type type, BindingFlags moreFlags = BindingFlags.Default)
         {
             return type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Instance | moreFlags);

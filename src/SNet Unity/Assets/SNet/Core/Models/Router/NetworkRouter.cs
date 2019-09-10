@@ -18,6 +18,12 @@ namespace SNet.Core.Models.Router
 
         private Dictionary<byte, Dictionary<byte, TypedCallbackHandlers>> _callbacks;
 
+        public delegate void SendEvent(uint peerId, byte[] data, byte channel, PacketFlags flags);
+        public event SendEvent SendToNetwork;
+
+        public delegate void BroadcastEvent(byte[] data, byte channel, PacketFlags flags, bool filter);
+        public event BroadcastEvent BroadcastToNetwork;
+        
         public delegate void PeerEvent(uint peerId);
 
         public static event PeerEvent OnPeerConnection;
@@ -60,21 +66,22 @@ namespace SNet.Core.Models.Router
 
         private void SendData<T>(byte channel, byte header, T obj, uint peerId, PacketFlags flags = PacketFlags.None)
         {
-            CreatePayload(header, obj);
-            // SendToNetwork(peerId, channel, flags);
+            var data = CreatePayload(header, obj);
+            SendToNetwork?.Invoke(peerId, data, channel, flags);
         }
 
         private void SendData<T>(byte channel, byte header, T obj, PacketFlags flags = PacketFlags.None,
             bool filter = true)
         {
-            CreatePayload(header, obj);
-            // BroadcastToNetwork(channel, flags, filter);
+            var data = CreatePayload(header, obj);
+            BroadcastToNetwork?.Invoke(data, channel, flags, filter);
         }
 
-        private void CreatePayload<T>(byte header, T obj)
+        private byte[] CreatePayload<T>(byte header, T obj)
         {
             var data = NetworkBinary.Serialize(obj);
             _wrapper.CreateRaw(data, header);
+            return _wrapper.Raw;
         }
 
         private void Publish(uint peerId, byte channel, byte header, byte[] array)
@@ -111,7 +118,7 @@ namespace SNet.Core.Models.Router
         private void PeerReceiveData(uint peerId, byte channelId, byte[] data)
         {
             _wrapper.CreatePayload(data);
-//            GameDebug.Log($"Message from channel {channelId} and header {Wrapper.Header}");
+//            Debug.Log($"Message from channel {channelId} and header {Wrapper.Header}");
             Publish(peerId, channelId, _wrapper.Header, _wrapper.Payload);
         }
 

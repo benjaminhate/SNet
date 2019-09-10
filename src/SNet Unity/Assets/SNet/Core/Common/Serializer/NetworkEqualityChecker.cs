@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using System.Linq;
-using System.Reflection;
 
 namespace SNet.Core.Common.Serializer
 {
@@ -28,9 +27,25 @@ namespace SNet.Core.Common.Serializer
         /// <returns>True if the class objects are equal; false if not</returns>
         public static bool CheckClass<T>(T a, T b)
         {
-            IEnumerable<FieldInfo> infos = GetInfos<T>();
+            return CheckClass(a, b, typeof(T));
+        }
 
-            return !(from info in infos let type = info.FieldType let aVal = info.GetValue(a) let bVal = info.GetValue(b) where !TypeCheck(aVal, bVal) select aVal).Any();
+        /// <summary>
+        /// Check if two class objects are equal
+        /// </summary>
+        /// <param name="a">The first class object</param>
+        /// <param name="b">The second class object</param>
+        /// <param name="type">The type of the class</param>
+        /// <returns>True if the class objects are equal; false if not</returns>
+        /// <exception cref="ArgumentException">The type is not a class type</exception>
+        public static bool CheckClass(object a, object b, Type type)
+        {
+            if(!type.IsClass)
+                throw new ArgumentException("The type is not a class type", nameof(type));
+            
+            var infos = GetInfos(type);
+
+            return !(from info in infos let fieldType = info.FieldType let aVal = info.GetValue(a) let bVal = info.GetValue(b) where !TypeCheck(aVal, bVal) select aVal).Any();
         }
 
         /// <summary>
@@ -42,15 +57,36 @@ namespace SNet.Core.Common.Serializer
         /// <returns>True if the list objects are equal; false if not</returns>
         public static bool CheckList<T>(T a, T b) where T : IList
         {
-            var aCount = a.Count;
-            var bCount = b.Count;
+            return CheckList(a, b, typeof(T));
+        }
+        
+        /// <summary>
+        /// Check if two list objects are equal
+        /// </summary>
+        /// <param name="a">The first list object</param>
+        /// <param name="b">The second list object</param>
+        /// <param name="type">The type of the list</param>
+        /// <returns>True if the list objects are equal; false if not</returns>
+        /// <exception cref="ArgumentException">The type is not derived from IList</exception>
+        public static bool CheckList(object a, object b, Type type)
+        {
+            if (!typeof(IList).IsAssignableFrom(type))
+            {
+                throw new ArgumentException("Type should be derived from IList to use CheckList function", nameof(type));
+            }
+            
+            var aList = (IList) a;
+            var bList = (IList) b;
+            
+            var aCount = aList.Count;
+            var bCount = bList.Count;
             if (aCount != bCount)
                 return false;
 
             for (var i = 0; i < aCount; i++)
             {
-                var aSubVal = a[i];
-                var bSubVal = b[i];
+                var aSubVal = aList[i];
+                var bSubVal = bList[i];
                 if (!TypeCheck(aSubVal, bSubVal))
                     return false;
             }
@@ -92,19 +128,13 @@ namespace SNet.Core.Common.Serializer
             }
             else if (typeof(IList).IsAssignableFrom(type))
             {
-                var success = (bool)typeof(NetworkEqualityChecker)
-                    ?.GetMethod("CheckList")
-                    ?.MakeGenericMethod(type)
-                    ?.Invoke(null, new[] { a, b });
+                var success = CheckList(a, b, type);
                 if (!success)
                     return false;
             }
             else
             {
-                var success = (bool)typeof(NetworkEqualityChecker)
-                    ?.GetMethod("CheckClass")
-                    ?.MakeGenericMethod(type)
-                    ?.Invoke(null, new[] { a, b });
+                var success = CheckClass(a, b, type);
                 if (!success)
                     return false;
             }

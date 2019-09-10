@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SNet.Core.Models.Router;
 using SNet.Core.Plugins.ENet.Scripts;
 
 namespace SNet.Core.Models.Network
@@ -11,8 +12,9 @@ namespace SNet.Core.Models.Network
         private readonly List<Peer> _peers = new List<Peer>();
         private readonly List<Peer> _peerFilter = new List<Peer>();
 
-        public delegate void NetworkEvent(ServerEventData data);
+        private readonly NetworkRouter _router = NetworkRouter.Instance;
 
+        public delegate void NetworkEvent(ServerEventData data);
         public event NetworkEvent OnConnect;
         public event NetworkEvent OnDisconnect;
         public event NetworkEvent OnTimeout;
@@ -20,6 +22,16 @@ namespace SNet.Core.Models.Network
 
         public string Address { get; private set; }
         public ushort Port { get; private set; }
+
+        public bool IsActive => _host.IsSet;
+
+        public void Create()
+        {
+            _router.Start();
+
+            _router.SendToNetwork += Send;
+            _router.BroadcastToNetwork += Broadcast;
+        }
 
         public void Listen(string host, ushort port, int maxConnections, int maxChannels)
         {
@@ -33,6 +45,16 @@ namespace SNet.Core.Models.Network
             _host.Create(address, maxConnections, maxChannels);
 
             Address = host;
+        }
+
+        public void Listen(ushort port, int maxConnections, int maxChannels)
+        {
+            var address = new Address();
+
+            Port = port;
+            address.Port = Port;
+            
+            _host.Create(address, maxConnections, maxChannels);
         }
 
         public void Update()
@@ -57,16 +79,19 @@ namespace SNet.Core.Models.Network
                         case EventType.Connect:
                             AddPeer(netEvent.Peer);
                             OnConnect?.Invoke(data);
+                            NetworkRouter.PeerConnection(data.PeerId);
                             break;
 
                         case EventType.Disconnect:
                             RemovePeer(netEvent.Peer);
                             OnDisconnect?.Invoke(data);
+                            NetworkRouter.PeerDisconnection(data.PeerId);
                             break;
 
                         case EventType.Timeout:
                             RemovePeer(netEvent.Peer);
                             OnTimeout?.Invoke(data);
+                            NetworkRouter.PeerTimeout(data.PeerId);
                             break;
 
                         case EventType.Receive:
@@ -75,6 +100,7 @@ namespace SNet.Core.Models.Network
                             netEvent.Packet.Dispose();
                             data.Content = buffer;
                             OnReceive?.Invoke(data);
+                            NetworkRouter.PeerReceive(data.PeerId, data.ChannelId, data.Content);
                             break;
                     }
                 }

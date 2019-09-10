@@ -30,8 +30,8 @@ namespace SNet.Core.Common.Extensions
 
         public static int PrefixMatch(this string str, string prefix)
         {
-            int l = 0, slen = str.Length, plen = prefix.Length;
-            while (l < slen && l < plen)
+            int l = 0, sLen = str.Length, pLen = prefix.Length;
+            while (l < sLen && l < pLen)
             {
                 if (str[l] != prefix[l])
                     break;

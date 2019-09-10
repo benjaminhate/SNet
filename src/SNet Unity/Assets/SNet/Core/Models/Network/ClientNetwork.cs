@@ -17,6 +17,8 @@ namespace SNet.Core.Models.Network
         public ushort Port { get; private set; }
         public string Address { get; private set; }
 
+        public bool IsActive => _host.IsSet;
+
         public ClientNetwork()
         {
             Init();

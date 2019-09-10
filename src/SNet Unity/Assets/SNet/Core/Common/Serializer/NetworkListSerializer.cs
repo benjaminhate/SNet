@@ -23,7 +23,7 @@ namespace SNet.Core.Common.Serializer
             list.AddRange(GetBytes(count));
 
             var genType = typeof(T).GetGenericArguments()[0];
-            List<Type> childTypes = GetAllSubtypes(genType);
+            var childTypes = GetAllSubtypes(genType);
             var optiType = GetOptimizedType(childTypes.Count);
 
             for (var i = 0; i < count; i++)
@@ -64,7 +64,7 @@ namespace SNet.Core.Common.Serializer
 
             var listCount = (int)FromBytes(typeof(int), array, ref shift);
             var subType = type.GetGenericArguments()[0];
-            List<Type> childTypes = GetAllSubtypes(subType);
+            var childTypes = GetAllSubtypes(subType);
             var optiType = GetOptimizedType(childTypes.Count);
 
             for (var i = 0; i < listCount; i++)
@@ -86,7 +86,7 @@ namespace SNet.Core.Common.Serializer
         /// <returns>A list of subtypes</returns>
         private static List<Type> GetAllSubtypes(Type type)
         {
-            List<Type> subTypes = Assembly.GetAssembly(type)
+            var subTypes = Assembly.GetAssembly(type)
                 .GetTypes()
                 .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(type))
                 .ToList();
