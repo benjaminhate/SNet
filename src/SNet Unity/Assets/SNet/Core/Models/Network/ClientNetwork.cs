@@ -1,13 +1,16 @@
-﻿using SNet.Core.Plugins.ENet.Scripts;
+﻿using SNet.Core.Models.Router;
+using SNet.Core.Plugins.ENet.Scripts;
 
 namespace SNet.Core.Models.Network
 {
     public class ClientNetwork
     {
-        private Host _host;
+        private Host _host = new Host();
         public Peer Peer { get; private set; }
 
         public delegate void NetworkEvent(ClientEventData data);
+        
+        private NetworkRouter _router = NetworkRouter.Instance;
 
         public event NetworkEvent OnConnect;
         public event NetworkEvent OnDisconnect;
@@ -23,11 +26,12 @@ namespace SNet.Core.Models.Network
         {
             Init();
         }
-        
-        public void Init()
+
+        private void Init()
         {
-            _host = new Host();
-            Peer = new Peer();
+            _router.Start();
+            _router.SendToNetwork += (id, data, channel, flags) => Send(data, channel, flags);
+            _router.BroadcastToNetwork += (data, channel, flags, filter) => Send(data, channel, flags);
         }
         
         public void Create()
@@ -68,14 +72,17 @@ namespace SNet.Core.Models.Network
                 {
                     case EventType.Connect:
                         OnConnect?.Invoke(data);
+                        NetworkRouter.PeerConnection(data.PeerId);
                         break;
 
                     case EventType.Disconnect:
                         OnDisconnect?.Invoke(data);
+                        NetworkRouter.PeerDisconnection(data.PeerId);
                         break;
 
                     case EventType.Timeout:
                         OnTimeout?.Invoke(data);
+                        NetworkRouter.PeerTimeout(data.PeerId);
                         break;
 
                     case EventType.Receive:
@@ -86,6 +93,7 @@ namespace SNet.Core.Models.Network
                         data.Content = buffer;
 
                         OnReceive?.Invoke(data);
+                        NetworkRouter.PeerReceive(data.PeerId, data.ChannelId, data.Content);
                         break;
                 }
             }

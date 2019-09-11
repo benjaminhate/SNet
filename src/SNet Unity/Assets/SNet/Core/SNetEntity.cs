@@ -41,7 +41,7 @@ namespace SNet.Core
         
         public abstract void ClientSend(byte[] data);
 
-        public abstract void InternalClientReceive(byte[] array);
+        public abstract void InternalClientReceive(uint peerId, byte[] data);
 
         #endregion
     }

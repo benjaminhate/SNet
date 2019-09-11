@@ -25,7 +25,12 @@ namespace SNet.Core.Models.Network
 
         public bool IsActive => _host.IsSet;
 
-        public void Create()
+        public ServerNetwork()
+        {
+            Init();
+        }
+
+        private void Init()
         {
             _router.Start();
 

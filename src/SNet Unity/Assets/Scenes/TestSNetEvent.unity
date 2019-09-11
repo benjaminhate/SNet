@@ -196,13 +196,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 30759800}
-  m_LocalRotation: {x: 0.10791252, y: -0.31281912, z: 0.0357982, w: 0.9429833}
-  m_LocalPosition: {x: 1.37, y: 0.526, z: -1.729}
+  m_LocalRotation: {x: 0.19938132, y: -0.31858855, z: 0.06594671, w: 0.9243373}
+  m_LocalPosition: {x: 1.286, y: 1.085, z: -1.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 13.057, y: -36.705, z: 0}
+  m_LocalEulerAnglesHint: {x: 24.243002, y: -38.104, z: -0.32200003}
 --- !u!1 &1143433895
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secondsToChange: 0.5
+  sNetColorEvent: {fileID: 1941192457}
 --- !u!65 &1941192453
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -413,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e333a1b7f78944089927b0a1e3bea096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientEventCallbacks:
+  clientReceiveCallback:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1941192452}

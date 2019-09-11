@@ -11,10 +11,12 @@ namespace SNet.Core.Events
 
         protected new void Awake()
         {
-            if (IsClient && clientReceiveCallback != null)
+            base.Awake();
+            
+            if (IsClient)
             {
                 // TODO Change to NetworkRouter.RegisterClientCallback(identity.Id, clientEventCallbacks);
-                NetworkRouter.Register(ChannelType.Base, HeaderType.Base, ((id, value) => clientReceiveCallback?.Invoke((T)value)), typeof(T));
+                NetworkRouter.Register(ChannelType.Base, HeaderType.Base, InternalClientReceive);
                 //NetworkRouter.Register(ChannelType.Base, HeaderType.Base, (value) => InternalClientReceive?.Invoke(value));
             }
 
@@ -53,7 +55,7 @@ namespace SNet.Core.Events
             throw new NotImplementedException();
         }
 
-        public override void InternalClientReceive(byte[] array)
+        public override void InternalClientReceive(uint peerId, byte[] data)
         {
             throw new NotImplementedException();
         }

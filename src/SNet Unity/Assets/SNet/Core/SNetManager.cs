@@ -64,6 +64,7 @@ namespace SNet.Core
             Client = new ClientNetwork();
             
             Client.OnConnect += data => Debug.Log($"Connected to server {data.PeerId}");
+            Client.OnReceive += data => Debug.Log($"Received message from server {data.PeerId}");
             
             Client.Create();
             
@@ -82,22 +83,19 @@ namespace SNet.Core
         {
             _isServer = true;
             Server = new ServerNetwork();
-            Server.Create();
 
             Server.OnConnect += ServerOnClientConnect;
             Server.OnDisconnect += ServerOnClientDisconnect;
             Server.OnTimeout += ServerOnClientTimeout;
             Server.OnReceive += ServerOnClientReceive;
 
-            NetworkRouter.Instance.BroadcastToNetwork += Server.Broadcast;
-            NetworkRouter.Instance.SendToNetwork += Server.Send;
-            
             Server.Listen(networkAddress, networkPort, maxConnections, maxChannels);
         }
 
         internal virtual void ServerOnClientConnect(ServerEventData data)
         {
             Debug.Log($"Client {data.PeerId} connected with address {data.PeerIp}");
+            Server.AddToFilter(data.PeerId);
         }
 
         internal virtual void ServerOnClientDisconnect(ServerEventData data)

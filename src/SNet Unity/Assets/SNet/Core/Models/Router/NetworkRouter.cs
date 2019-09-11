@@ -47,16 +47,13 @@ namespace SNet.Core.Models.Router
             _wrapper = new RouterWrapper();
         }
 
-        private void RegisterCallback(byte channel, byte header, RouterCallback routerCallback, Type returnType)
+        private void RegisterCallback(byte channel, byte header, RouterCallback routerCallback)
         {
             if (!_callbacks.ContainsKey(channel))
                 _callbacks.Add(channel, new Dictionary<byte, TypedCallbackHandlers>());
 
             if (!_callbacks[channel].ContainsKey(header))
-                _callbacks[channel].Add(header, new TypedCallbackHandlers
-                {
-                    Type = returnType
-                });
+                _callbacks[channel].Add(header, new TypedCallbackHandlers());
 
             _callbacks[channel][header].Callbacks.Add(new CallbackHandler
             {
@@ -65,22 +62,21 @@ namespace SNet.Core.Models.Router
             });
         }
 
-        private void SendData<T>(byte channel, byte header, T obj, uint peerId, PacketFlags flags = PacketFlags.None)
+        private void SendData(byte channel, byte header, byte[] obj, uint peerId, PacketFlags flags = PacketFlags.None)
         {
             var data = CreatePayload(header, obj);
             SendToNetwork?.Invoke(peerId, data, channel, flags);
         }
 
-        private void SendData<T>(byte channel, byte header, T obj, PacketFlags flags = PacketFlags.None,
+        private void SendData(byte channel, byte header, byte[] obj, PacketFlags flags = PacketFlags.None,
             bool filter = true)
         {
             var data = CreatePayload(header, obj);
             BroadcastToNetwork?.Invoke(data, channel, flags, filter);
         }
 
-        private byte[] CreatePayload<T>(byte header, T obj)
+        private byte[] CreatePayload(byte header, byte[] data)
         {
-            var data = NetworkBinary.Serialize(obj);
             _wrapper.CreateRaw(data, header);
             return _wrapper.Raw;
         }
@@ -88,12 +84,8 @@ namespace SNet.Core.Models.Router
         private void Publish(uint peerId, byte channel, byte header, byte[] array)
         {
             var structure = GetCallbacks(channel, header);
-            if (structure == null) return;
 
-            var shift = 0;
-            var type = structure.Type;
-            var data = NetworkBinary.Deserialize(array, ref shift, type);
-            structure.Callbacks.ForEach(c => c.Func?.Invoke(peerId, data));
+            structure?.Callbacks.ForEach(c => c.Func?.Invoke(peerId, array));
         }
 
         private void UnRegisterCallback(byte channel, byte header, RouterCallback routerCallback)
@@ -124,17 +116,17 @@ namespace SNet.Core.Models.Router
         }
 
 
-        public static void Register(byte channel, byte header, RouterCallback routerCallback, Type returnType)
+        public static void Register(byte channel, byte header, RouterCallback routerCallback)
         {
-            Instance.RegisterCallback(channel, header, routerCallback, returnType);
+            Instance.RegisterCallback(channel, header, routerCallback);
         }
 
-        public static void Send<T>(byte channel, byte header, T obj, uint peerId, PacketFlags flags = PacketFlags.None)
+        public static void Send(byte channel, byte header, byte[] obj, uint peerId, PacketFlags flags = PacketFlags.None)
         {
             Instance.SendData(channel, header, obj, peerId, flags);
         }
 
-        public static void Send<T>(byte channel, byte header, T obj, PacketFlags flags = PacketFlags.None,
+        public static void Send(byte channel, byte header, byte[] obj, PacketFlags flags = PacketFlags.None,
             bool filter = true)
         {
             Instance.SendData(channel, header, obj, flags, filter);
