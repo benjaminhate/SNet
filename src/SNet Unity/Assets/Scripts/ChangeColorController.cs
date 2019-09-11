@@ -26,6 +26,8 @@ public class ChangeColorController : MonoBehaviour
         while (true)
         {
             var newColor = Random.ColorHSV();
+
+            _renderer.material.color = newColor;
             sNetColorEntity.ServerBroadcast(newColor);
             yield return new WaitForSeconds(secondsToChange);
         }
