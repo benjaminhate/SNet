@@ -55,7 +55,7 @@ namespace SNet.Core.Events
             throw new NotImplementedException();
         }
 
-        public override void InternalClientReceive(uint peerId, byte[] data)
+        protected override void InternalClientReceive(uint peerId, byte[] data)
         {
             throw new NotImplementedException();
         }

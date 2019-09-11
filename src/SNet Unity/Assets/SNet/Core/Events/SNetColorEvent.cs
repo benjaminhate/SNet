@@ -16,7 +16,7 @@ namespace SNet.Core.Events
             ServerBroadcastSerializable(arr);
         }
 
-        public override void InternalClientReceive(uint peerId, byte[] data)
+        protected override void InternalClientReceive(uint peerId, byte[] data)
         {
             var color = SNetColorSerializer.Deserialize(data);
             clientReceiveCallback?.Invoke(color);
