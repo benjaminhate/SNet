@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using SNet.Core;
+using SNet.Core.Events;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -7,27 +8,26 @@ using Random = UnityEngine.Random;
 public class ChangeColorController : MonoBehaviour
 {
     [SerializeField] private float secondsToChange = .5f;
+    [SerializeField] private SNetColorEvent sNetColorEntity;
 
     private Renderer _renderer;
-    private SNetEntity _sNetEntity;
 
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
-        _sNetEntity = GetComponent<SNetEntity>();
-        var server = _sNetEntity.IsServer;
 
-        if(server)
+        if (sNetColorEntity?.IsServer == true)
             StartCoroutine(nameof(ChangeColor));
     }
 
     private IEnumerator ChangeColor()
     {
+        if (sNetColorEntity == null) yield return null;
         while (true)
         {
             var newColor = Random.ColorHSV();
 
-            _sNetEntity.ServerBroadcast(newColor);
+            sNetColorEntity.ServerBroadcast(newColor);
             yield return new WaitForSeconds(secondsToChange);
         }
     }
