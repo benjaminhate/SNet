@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using SNet.Core.Common.Serializer;
 
 namespace SNet.Core.Models.Router
 {
@@ -6,29 +7,32 @@ namespace SNet.Core.Models.Router
     {
         public byte[] Raw { get; private set; }
 
-        public byte Header { get; private set; }
+        public string Header { get; private set; }
         public byte[] Payload { get; private set; }
 
         public void CreatePayload(byte[] buffer)
         {
             Raw = buffer;
-            Header = Raw[0];
-            Payload = Raw.Skip(1).ToArray();
+            var shift = 0;
+            Header = NetworkBinary.Deserialize<string>(Raw, ref shift);
+            Payload = Raw.Skip(shift).ToArray();
         }
 
-        public void CreateRaw(byte[] array, byte header)
+        public void CreateRaw(byte[] array, string header)
         {
             Payload = array;
             Header = header;
 
+            var headerByte = NetworkBinary.Serialize(Header);
+
             var copyPayload = Payload != null;
-            var rawLength = copyPayload ? Payload.Length + 1 : 1;
+            var rawLength = copyPayload ? Payload.Length + headerByte.Length : headerByte.Length;
 
             Raw = new byte[rawLength];
-            Raw[0] = Header;
+            headerByte.CopyTo(Raw, 0);
             if (copyPayload)
             {
-                Payload.CopyTo(Raw, 1);
+                Payload.CopyTo(Raw, headerByte.Length);
             }
         }
     }

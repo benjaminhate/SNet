@@ -4,8 +4,8 @@ namespace SNet.Core.Events
 {
     public abstract class SNetEvent : SNetEntity
     {
-        protected RouterCallback clientReceive;
-        protected RouterCallback serverReceive;
+        protected RouterCallback ClientReceive;
+        protected RouterCallback ServerReceive;
 
         protected new void Awake()
         {
@@ -13,16 +13,14 @@ namespace SNet.Core.Events
 
             Setup();
 
-            if (IsClient && clientReceive != null)
+            if (IsClient && ClientReceive != null)
             {
-                // TODO Change to NetworkRouter.RegisterClientCallback(identity.Id, clientEventCallbacks);
-                NetworkRouterRegister(clientReceive);
-                //NetworkRouter.Register(ChannelType.Base, HeaderType.Base, (value) => InternalClientReceive?.Invoke(value));
+                NetworkRouterRegister(ClientReceive);
             }
 
-            if (IsServer && serverReceive != null)
+            if (IsServer && ServerReceive != null)
             {
-                // TODO Change to NetworkRouter.RegisterServerCallback(identity.Id, serverEventCallbacks);
+                NetworkRouterRegister(ServerReceive);
             }
         }
 

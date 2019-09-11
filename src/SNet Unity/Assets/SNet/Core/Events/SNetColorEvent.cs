@@ -13,7 +13,7 @@ namespace SNet.Core.Events
 
         protected override void Setup()
         {
-            clientReceive += OnClientReceive;
+            ClientReceive += OnClientReceive;
         }
 
         public void ServerBroadcast(Color color)

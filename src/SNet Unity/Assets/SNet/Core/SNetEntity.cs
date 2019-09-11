@@ -18,18 +18,19 @@ namespace SNet.Core
             // TODO Self Registration
             // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
+            identity = SNetManager.RegisterIdentity(this);
         }
 
         protected void NetworkRouterRegister(RouterCallback callback)
         {
-            NetworkRouter.Register(ChannelType.Base, HeaderType.Base, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
+            NetworkRouter.Register(ChannelType.Base, identity.Id, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
         }
 
         #region SERVER STUFF
 
         protected void ServerBroadcastSerializable(byte[] data)
         {
-            NetworkRouter.Send(ChannelType.Base, HeaderType.Base, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            NetworkRouter.Send(ChannelType.Base, identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnServerReceive(byte[] data);
@@ -41,6 +42,11 @@ namespace SNet.Core
         #endregion
 
         #region CLIENT STUFF
+        
+        protected void ClientSendSerializable(byte[] data)
+        {
+            NetworkRouter.Send(ChannelType.Base, identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+        }
 
         //protected abstract void OnClientReceive(byte[] data);
 

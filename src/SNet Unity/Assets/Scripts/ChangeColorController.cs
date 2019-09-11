@@ -7,15 +7,14 @@ public class ChangeColorController : MonoBehaviour
 {
     [SerializeField] private float secondsToChange = .5f;
     [SerializeField] private SNetColorEvent sNetColorEntity;
+    [SerializeField] private SNetIntEvent sNetIntEvent;
 
     private Renderer _renderer;
 
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
-
-        //sNetColorEntity.serv
-
+        
         if (sNetColorEntity?.IsServer == true)
             StartCoroutine(nameof(ChangeColor));
     }
@@ -36,5 +35,11 @@ public class ChangeColorController : MonoBehaviour
     public void ChangeColorClient(Color serverColor)
     {
         _renderer.material.color = serverColor;
+        sNetIntEvent.ClientSend(Random.Range(0, 10));
+    }
+
+    public void ChangeIntServer(int clientValue)
+    {
+        Debug.Log($"Received {clientValue} from client");
     }
 }

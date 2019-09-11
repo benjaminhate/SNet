@@ -13,8 +13,8 @@ namespace SNet.Core.Events
 
         protected override void Setup()
         {
-            clientReceive += OnClientReceive;
-            serverReceive += OnServerReceive;
+            ClientReceive += OnClientReceive;
+            ServerReceive += OnServerReceive;
         }
 
         private void OnClientReceive(uint peerId, byte[] array)
@@ -29,11 +29,22 @@ namespace SNet.Core.Events
 
         public void ServerBroadcast(int data)
         {
+            var value = SerializeInt(data);
+            ServerBroadcastSerializable(value);
+        }
+
+        public void ClientSend(int data)
+        {
+            var value = SerializeInt(data);
+            ClientSendSerializable(value);
+        }
+
+        private static byte[] SerializeInt(int data)
+        {
             var value = BitConverter.GetBytes(data);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(value);
-
-            ServerBroadcastSerializable(value);
+            return value;
         }
     }
 }
