@@ -324,11 +324,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1941192451}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3e06405607b7fb47a23a05b58ca1b14, type: 3}
+  m_Script: {fileID: 11500000, guid: 0cd1d183625e3d04a86b81a0c7526d4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   secondsToChange: 0.5
-  sNetColorEvent: {fileID: 1941192457}
+  sNetColorEntity: {fileID: 1941192457}
 --- !u!65 &1941192453
 BoxCollider:
   m_ObjectHideFlags: 0
