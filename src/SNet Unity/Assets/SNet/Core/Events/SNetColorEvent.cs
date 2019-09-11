@@ -4,19 +4,24 @@ using UnityEngine.Events;
 
 namespace SNet.Core.Events
 {
-    [Serializable] public class ColorEvent : UnityEvent<Color>{ }
-    
-    public class SNetColorEvent : SNetEvent<Color>
+    [Serializable] public class ColorEvent : UnityEvent<Color> { }
+
+    public class SNetColorEvent : SNetEvent
     {
-        public new ColorEvent clientReceiveCallback;
-        
+        protected ColorEvent clientReceiveCallback;
+
+        protected override void Setup()
+        {
+            clientReceive += OnClientReceive;
+        }
+
         public void ServerBroadcast(Color color)
         {
             var arr = SNetColorSerializer.Serialize(color);
             ServerBroadcastSerializable(arr);
         }
 
-        protected override void InternalClientReceive(uint peerId, byte[] data)
+        private void OnClientReceive(uint peerId, byte[] data)
         {
             var color = SNetColorSerializer.Deserialize(data);
             clientReceiveCallback?.Invoke(color);

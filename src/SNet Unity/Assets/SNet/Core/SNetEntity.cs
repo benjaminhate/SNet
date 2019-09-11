@@ -11,7 +11,7 @@ namespace SNet.Core
         public bool IsClient => SNetManager.IsClientActive;
 
         protected SNetManager SNetManager;
-        
+
         protected void Awake()
         {
             SNetManager = SNetManager.Instance;
@@ -20,28 +20,33 @@ namespace SNet.Core
             // Get identity from registration
         }
 
+        protected void NetworkRouterRegister(RouterCallback callback)
+        {
+            NetworkRouter.Register(ChannelType.Base, HeaderType.Base, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
+        }
+
         #region SERVER STUFF
 
-        public abstract void OnServerReceive(byte[] data);
-
-        public abstract void ServerSend(object target, byte[] data);
-
-        public abstract void ServerBroadcast(byte[] data);
-
-        public void ServerBroadcastSerializable(byte[] data)
+        protected void ServerBroadcastSerializable(byte[] data)
         {
             NetworkRouter.Send(ChannelType.Base, HeaderType.Base, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
+
+        //protected abstract void OnServerReceive(byte[] data);
+
+        //protected abstract void ServerSend(object target, byte[] data);
+
+        //protected abstract void ServerBroadcast(byte[] data);
 
         #endregion
 
         #region CLIENT STUFF
 
-        public abstract void OnClientReceive(byte[] data);
-        
-        public abstract void ClientSend(byte[] data);
+        //protected abstract void OnClientReceive(byte[] data);
 
-        protected abstract void InternalClientReceive(uint peerId, byte[] data);
+        //protected abstract void ClientSend(byte[] data);
+
+        //protected abstract void InternalClientReceive(uint peerId, byte[] data);
 
         #endregion
     }

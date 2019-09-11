@@ -1,8 +1,6 @@
 ﻿using System.Collections;
-using SNet.Core;
 using SNet.Core.Events;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Renderer))]
 public class ChangeColorController : MonoBehaviour
@@ -15,6 +13,8 @@ public class ChangeColorController : MonoBehaviour
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
+
+        //sNetColorEntity.serv
 
         if (sNetColorEntity?.IsServer == true)
             StartCoroutine(nameof(ChangeColor));
