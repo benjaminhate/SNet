@@ -8,7 +8,7 @@ namespace SNet.Core.Events
 
     public class SNetColorEvent : SNetEvent
     {
-        protected ColorEvent clientReceiveCallback;
+        public ColorEvent clientReceiveCallback;
 
         protected override void Setup()
         {
