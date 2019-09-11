@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SNet.Core.Events
+namespace SNet.Core.Events.Serializers
 {
     public static class SNetIntSerializer
     {

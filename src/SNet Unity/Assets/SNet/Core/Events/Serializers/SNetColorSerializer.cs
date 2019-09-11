@@ -1,7 +1,7 @@
 using SNet.Core.Common.Serializer;
 using UnityEngine;
 
-namespace SNet.Core.Events
+namespace SNet.Core.Events.Serializers
 {
     public static class SNetColorSerializer
     {
