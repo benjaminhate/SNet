@@ -1,7 +1,5 @@
-using System;
 using SNet.Core.Common;
 using SNet.Core.Models.Network;
-using SNet.Core.Models.Router;
 using UnityEngine;
 
 namespace SNet.Core
@@ -114,14 +112,5 @@ namespace SNet.Core
             
         }
         #endregion
-
-        public SNetIdentity RegisterIdentity(SNetEntity entity)
-        {
-            return new SNetIdentity{
-                Id = $"{entity.name}.{entity.GetType().Name}"
-            };
-        }
-
-        
     }
 }

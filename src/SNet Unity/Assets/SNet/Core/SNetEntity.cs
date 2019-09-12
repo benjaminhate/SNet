@@ -3,34 +3,34 @@ using UnityEngine;
 
 namespace SNet.Core
 {
+    [RequireComponent(typeof(SNetIdentity))]
     public abstract class SNetEntity : MonoBehaviour
     {
-        public SNetIdentity identity;
         public bool IsLocalClient { get; private set; } // To know if we are going to Predict or Interpolation the entity
         public bool IsServer => SNetManager.IsServerActive;
         public bool IsClient => SNetManager.IsClientActive;
 
-        protected SNetManager SNetManager;
+        protected readonly SNetManager SNetManager = SNetManager.Instance;
+        protected SNetIdentity Identity;
 
         protected void Awake()
         {
-            SNetManager = SNetManager.Instance;
             // TODO Self Registration
             // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
-            identity = SNetManager.RegisterIdentity(this);
+            Identity = GetComponent<SNetIdentity>();
         }
 
         protected void NetworkRouterRegister(RouterCallback callback)
         {
-            NetworkRouter.Register(ChannelType.Base, identity.Id, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
+            NetworkRouter.Register(ChannelType.Base, Identity.Id, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
         }
 
         #region SERVER STUFF
 
         protected void ServerBroadcastSerializable(byte[] data)
         {
-            NetworkRouter.Send(ChannelType.Base, identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            NetworkRouter.Send(ChannelType.Base, Identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnServerReceive(byte[] data);
@@ -45,7 +45,7 @@ namespace SNet.Core
         
         protected void ClientSendSerializable(byte[] data)
         {
-            NetworkRouter.Send(ChannelType.Base, identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            NetworkRouter.Send(ChannelType.Base, Identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnClientReceive(byte[] data);
