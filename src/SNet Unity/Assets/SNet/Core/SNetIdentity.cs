@@ -1,3 +1,5 @@
+using System;
+using SNet.Core.Models.Router;
 using UnityEngine;
 
 namespace SNet.Core
@@ -25,6 +27,24 @@ namespace SNet.Core
             if(serverOnly && !IsServer)
                 Destroy(gameObject);
             // TODO separate behaviours when IsClient, IsServer, IsSceneSpawned
+            if (IsServer)
+            {
+                Id = GenerateNewId();
+            }
+            else if (IsClient)
+            {
+                Id = GenerateFakeId();
+            }
+        }
+
+        private string GenerateNewId()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
+        private string GenerateFakeId()
+        {
+            return Guid.Empty.ToString();
         }
     }
 }
