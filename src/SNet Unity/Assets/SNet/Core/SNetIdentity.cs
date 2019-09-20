@@ -7,8 +7,7 @@ namespace SNet.Core
     // Network Identity for SNet entities
     public class SNetIdentity : MonoBehaviour
     {
-        public bool serverOnly;
-        
+        public bool isPredictive;
         public string Id { get; private set; }
 
         public bool IsClient => _sNetManager.IsClientActive;
@@ -18,33 +17,45 @@ namespace SNet.Core
 
         private void Awake()
         {
-            Register();
+            if (IsServer)
+                Initialize(GenerateNewId());
         }
 
-        private void Register()
+        public void Initialize(string id)
         {
-            // If not on server and set server only, the gameObject must be destroyed because it has no business here
-            if(serverOnly && !IsServer)
-                Destroy(gameObject);
-            // TODO separate behaviours when IsClient, IsServer, IsSceneSpawned
+            // TODO Initialize Called when Spawn Message is received on the client side
+            Register(id);
             if (IsServer)
             {
-                Id = GenerateNewId();
+                // TODO Send Spawn Message to Clients
             }
-            else if (IsClient)
+        }
+
+        private void Register(string id)
+        {
+            if (IsServer || (IsClient && !isPredictive))
             {
-                Id = GenerateFakeId();
+                Id = id;
+                InitializeEntities();
+            }
+            else
+            {
+                // TODO Send message to server and InitializeEntities on response
+            }
+        }
+
+        private void InitializeEntities()
+        {
+            var entities = GetComponents<SNetEntity>();
+            foreach (var entity in entities)
+            {
+                entity.Initialize();
             }
         }
 
         private string GenerateNewId()
         {
             return Guid.NewGuid().ToString();
-        }
-
-        private string GenerateFakeId()
-        {
-            return Guid.Empty.ToString();
         }
     }
 }

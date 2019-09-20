@@ -11,7 +11,7 @@ namespace SNet.Core.Events
     {
         public ColorEvent clientReceiveCallback;
 
-        protected override void Setup()
+        protected override void PreSetup()
         {
             ClientReceive += OnClientReceive;
         }

@@ -13,13 +13,17 @@ namespace SNet.Core
         protected readonly SNetManager SNetManager = SNetManager.Instance;
         protected SNetIdentity Identity;
 
-        protected void Awake()
+        public void Initialize()
         {
             // TODO Self Registration
             // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
             Identity = GetComponent<SNetIdentity>();
+
+            Setup();
         }
+
+        public abstract void Setup();
 
         protected void NetworkRouterRegister(RouterCallback callback)
         {

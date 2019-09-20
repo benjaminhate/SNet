@@ -11,7 +11,7 @@ namespace SNet.Core.Events
         public IntEvent clientReceiveCallback;
         public IntEvent serverReceiveCallback;
 
-        protected override void Setup()
+        protected override void PreSetup()
         {
             ClientReceive += OnClientReceive;
             ServerReceive += OnServerReceive;

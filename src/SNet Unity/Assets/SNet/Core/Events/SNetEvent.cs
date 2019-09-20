@@ -7,11 +7,9 @@ namespace SNet.Core.Events
         protected RouterCallback ClientReceive;
         protected RouterCallback ServerReceive;
 
-        protected new void Awake()
+        public override void Setup()
         {
-            base.Awake();
-
-            Setup();
+            PreSetup();
 
             if (IsClient && ClientReceive != null)
             {
@@ -24,6 +22,6 @@ namespace SNet.Core.Events
             }
         }
 
-        protected abstract void Setup();
+        protected abstract void PreSetup();
     }
 }
