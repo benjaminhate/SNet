@@ -308,7 +308,6 @@ GameObject:
   - component: {fileID: 1941192453}
   - component: {fileID: 1941192452}
   - component: {fileID: 1941192457}
-  - component: {fileID: 1941192458}
   - component: {fileID: 1941192459}
   m_Layer: 0
   m_Name: Cube
@@ -331,7 +330,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secondsToChange: 0.5
   sNetColorEntity: {fileID: 1941192457}
-  sNetIntEvent: {fileID: 1941192458}
+  sNetIntEvent: {fileID: 0}
 --- !u!65 &1941192453
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -422,35 +421,6 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1941192452}
         m_MethodName: ChangeColorClient
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
---- !u!114 &1941192458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941192451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38dc438b7c1c7904fb55af641d5f54ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clientReceiveCallback:
-    m_PersistentCalls:
-      m_Calls: []
-  serverReceiveCallback:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1941192452}
-        m_MethodName: ChangeIntServer
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

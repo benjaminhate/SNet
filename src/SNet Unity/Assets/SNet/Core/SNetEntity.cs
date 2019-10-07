@@ -27,14 +27,14 @@ namespace SNet.Core
 
         protected void NetworkRouterRegister(RouterCallback callback)
         {
-            NetworkRouter.Register(Identity.Id, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
+            NetworkRouter.Register("0", callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
         }
 
         #region SERVER STUFF
 
         protected void ServerBroadcastSerializable(byte[] data)
         {
-            NetworkRouter.Send(Identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            NetworkRouter.Send("0", data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnServerReceive(byte[] data);
@@ -49,7 +49,7 @@ namespace SNet.Core
         
         protected void ClientSendSerializable(byte[] data)
         {
-            NetworkRouter.Send(Identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            NetworkRouter.Send("0", data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnClientReceive(byte[] data);

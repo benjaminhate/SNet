@@ -19,6 +19,8 @@ namespace SNet.Core
         {
             if (IsServer)
                 Initialize(GenerateNewId());
+            else
+                Initialize("0");
         }
 
         public void Initialize(string id)
@@ -28,6 +30,7 @@ namespace SNet.Core
             if (IsServer)
             {
                 // TODO Send Spawn Message to Clients
+                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, id, null);
             }
         }
 

@@ -22,7 +22,7 @@ namespace SNet.Core
         public ClientNetwork Client { get; private set; }
         public ServerNetwork Server { get; private set; }
 
-        public bool IsServerActive => _isServer &&  Server != null && Server.IsActive;
+        public bool IsServerActive => _isServer && Server != null && Server.IsActive;
         public bool IsClientActive => _isClient && Client != null && Client.IsActive;
 
         public string NetworkAddress => networkAddress;
