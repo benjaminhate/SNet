@@ -156,14 +156,30 @@ namespace SNet.Core.Models.Router
             Instance.SendDataByChannel(channel, header, obj, flags, filter);
         }
 
+        public static void SendByChannel(byte channel, string header, MessageBase msg,
+            PacketFlags flags = PacketFlags.None, bool filter = true)
+        {
+            SendByChannel(channel, header, msg.Serialize(), flags, filter);
+        }
+
         public static void Send(string header, byte[] obj, uint peerId, PacketFlags flags = PacketFlags.None)
         {
             Instance.SendDataToPeerId(header, obj, peerId, flags);
+        }
+        
+        public static void Send(string header, MessageBase msg, uint peerId, PacketFlags flags = PacketFlags.None)
+        {
+            Send(header, msg.Serialize(), peerId, flags);
         }
 
         public static void Send(string header, byte[] obj, PacketFlags flags = PacketFlags.None, bool filter = true)
         {
             Instance.SendData(header, obj, flags, filter);
+        }
+        
+        public static void Send(string header, MessageBase msg, PacketFlags flags = PacketFlags.None, bool filter = true)
+        {
+            Send(header, msg.Serialize(), flags, filter);
         }
 
         public static void UnRegisterByChannel(byte channel, string header, RouterCallback routerCallback)

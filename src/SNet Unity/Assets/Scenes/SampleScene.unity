@@ -397,6 +397,8 @@ MonoBehaviour:
   connectClientOnStart: 1
   dontDestroyOnLoad: 1
   runInBackground: 1
+  spawnList:
+  - {fileID: 4945509566497612358, guid: d7ec15148211bd946b11d797b1d1d0f9, type: 3}
 --- !u!4 &1616593965
 Transform:
   m_ObjectHideFlags: 0

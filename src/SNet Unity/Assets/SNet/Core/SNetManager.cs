@@ -1,5 +1,9 @@
+using System.Collections.Generic;
 using SNet.Core.Common;
+using SNet.Core.Models;
 using SNet.Core.Models.Network;
+using SNet.Core.Models.Router;
+using UnityEditor;
 using UnityEngine;
 
 namespace SNet.Core
@@ -16,6 +20,8 @@ namespace SNet.Core
         [SerializeField] private bool dontDestroyOnLoad = true;
         [SerializeField] private bool runInBackground = true;
 
+        [SerializeField] private List<GameObject> spawnList;
+
         private bool _isClient;
         private bool _isServer;
 
@@ -27,6 +33,8 @@ namespace SNet.Core
 
         public string NetworkAddress => networkAddress;
         public ushort NetworkPort => networkPort;
+
+        public static string SpawnMessageHeader => "";
 
         private void Start()
         {
@@ -65,10 +73,21 @@ namespace SNet.Core
             Client.OnConnect += data => Debug.Log($"Connected to server {data.PeerId}");
             Client.OnReceive += data => Debug.Log($"Received message from server {data.PeerId}");
             
+            NetworkRouter.RegisterByChannel(ChannelType.SNetIdentity, SpawnMessageHeader, SpawnEntity);
+            
             Client.Create();
             
             if(connectClientOnStart)
                 Client.Connect(networkAddress, networkPort, maxChannels);
+        }
+
+        private void SpawnEntity(uint peerId, byte[] data)
+        {
+            var idMsg = new ObjectSpawnMessage();
+            idMsg.Deserialize(data);
+            var prefab = spawnList.Find(go => go.GetComponent<SNetIdentity>().AssetId == idMsg.AssetId);
+            var newObj = NetworkScene.Spawn(prefab, idMsg.Position, idMsg.Rotation);
+            newObj.GetComponent<SNetIdentity>().Initialize(idMsg.Id);
         }
         #endregion
 

@@ -1,5 +1,7 @@
 using System;
+using SNet.Core.Models;
 using SNet.Core.Models.Router;
+using UnityEditor;
 using UnityEngine;
 
 namespace SNet.Core
@@ -10,6 +12,22 @@ namespace SNet.Core
         public bool isPredictive;
         public string Id { get; private set; }
 
+        private string _assetId;
+
+        public string AssetId
+        {
+            get
+            {
+                #if UNITY_EDITOR
+                if (_assetId == null)
+                {
+                    SetupID();
+                }
+                #endif
+                return _assetId;
+            }
+        }
+
         public bool IsClient => _sNetManager.IsClientActive;
         public bool IsServer => _sNetManager.IsServerActive;
 
@@ -19,8 +37,6 @@ namespace SNet.Core
         {
             if (IsServer)
                 Initialize(GenerateNewId());
-            else
-                Initialize("0");
         }
 
         public void Initialize(string id)
@@ -29,8 +45,16 @@ namespace SNet.Core
             Register(id);
             if (IsServer)
             {
+                var trans = transform;
                 // TODO Send Spawn Message to Clients
-                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, id, null);
+                var msg = new ObjectSpawnMessage
+                {
+                    Id = id,
+                    AssetId = AssetId,
+                    Position = trans.position,
+                    Rotation = trans.rotation
+                };
+                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SNetManager.SpawnMessageHeader, msg);
             }
         }
 
@@ -60,5 +84,13 @@ namespace SNet.Core
         {
             return Guid.NewGuid().ToString();
         }
+        
+        #if UNITY_EDITOR
+        private void SetupID()
+        {
+            var path = AssetDatabase.GetAssetPath(gameObject);
+            _assetId = AssetDatabase.AssetPathToGUID(path);
+        }
+        #endif
     }
 }
