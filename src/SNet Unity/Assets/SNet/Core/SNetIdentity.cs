@@ -3,6 +3,7 @@ using SNet.Core.Models;
 using SNet.Core.Models.Router;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SNet.Core
 {
@@ -12,27 +13,25 @@ namespace SNet.Core
         public bool isPredictive;
         public string Id { get; private set; }
 
-        private string _assetId;
+        [SerializeField] private NetworkHash128 assetId;
 
-        public string AssetId
+        public NetworkHash128 AssetId
         {
             get
             {
                 #if UNITY_EDITOR
-                if (_assetId == null)
+                if (!assetId.IsValid())
                 {
                     SetupID();
                 }
                 #endif
-                return _assetId;
+                return assetId;
             }
         }
 
-        public bool IsClient => _sNetManager.IsClientActive;
-        public bool IsServer => _sNetManager.IsServerActive;
-
-        private readonly SNetManager _sNetManager = SNetManager.Instance;
-
+        private static bool IsClient => SNetManager.IsClient;
+        private static bool IsServer => SNetManager.IsServer;
+        
         private void Awake()
         {
             if (IsServer)
@@ -43,19 +42,18 @@ namespace SNet.Core
         {
             // TODO Initialize Called when Spawn Message is received on the client side
             Register(id);
-            if (IsServer)
+            if (!IsServer) return;
+            
+            var trans = transform;
+            // TODO Send Spawn Message to Clients
+            var msg = new ObjectSpawnMessage
             {
-                var trans = transform;
-                // TODO Send Spawn Message to Clients
-                var msg = new ObjectSpawnMessage
-                {
-                    Id = id,
-                    AssetId = AssetId,
-                    Position = trans.position,
-                    Rotation = trans.rotation
-                };
-                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SNetManager.SpawnMessageHeader, msg);
-            }
+                Id = id,
+                AssetId = AssetId,
+                Position = trans.position,
+                Rotation = trans.rotation
+            };
+            NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SNetManager.SpawnMessageHeader, msg);
         }
 
         private void Register(string id)
@@ -88,8 +86,42 @@ namespace SNet.Core
         #if UNITY_EDITOR
         private void SetupID()
         {
-            var path = AssetDatabase.GetAssetPath(gameObject);
-            _assetId = AssetDatabase.AssetPathToGUID(path);
+            if (ThisIsAPrefab())
+            {
+                AssignAssetId(gameObject);
+            }
+            else if (ThisIsASceneObjectReferencingAPrefab(out var prefab))
+            {
+                AssignAssetId(prefab);
+            }
+            else
+            {
+                assetId.Reset();
+            }
+        }
+
+        private bool ThisIsAPrefab()
+        {
+            return PrefabUtility.IsPartOfPrefabAsset(gameObject);
+        }
+
+        private bool ThisIsASceneObjectReferencingAPrefab(out GameObject prefab)
+        {
+            prefab = null;
+            if (!PrefabUtility.IsPartOfNonAssetPrefabInstance(gameObject))
+                return false;
+            
+            prefab = PrefabUtility.GetCorrespondingObjectFromSource(gameObject);
+            if (prefab != null) return true;
+            
+            Debug.LogError("Failed to find prefab parent for scene object [name:" + gameObject.name + "]");
+            return false;
+        }
+
+        private void AssignAssetId(Object prefab)
+        {
+            var path = AssetDatabase.GetAssetPath(prefab);
+            assetId = NetworkHash128.Parse(AssetDatabase.AssetPathToGUID(path));
         }
         #endif
     }

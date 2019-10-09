@@ -7,6 +7,7 @@ using UnityEngine;
 public class CubeSpawner : MonoBehaviour
 {
     public GameObject cube;
+    public GameObject sphere;
     public float distance = 5;
 
     private Camera _camera;
@@ -15,7 +16,7 @@ public class CubeSpawner : MonoBehaviour
     private void Start()
     {
         _camera = Camera.main;
-        _isServer = SNetManager.Instance.IsServerActive;
+        _isServer = SNetManager.IsServer;
     }
 
     private void Update()
@@ -26,10 +27,22 @@ public class CubeSpawner : MonoBehaviour
             pos.z = distance;
             SpawnCube(_camera.ScreenToWorldPoint(pos));
         }
+
+        if (_isServer && Input.GetMouseButtonDown(1))
+        {
+            var pos = Input.mousePosition;
+            pos.z = distance;
+            SpawnSphere(_camera.ScreenToWorldPoint(pos));
+        }
     }
 
     private void SpawnCube(Vector3 position)
     {
         NetworkScene.Spawn(cube, position, Quaternion.identity);
+    }
+    
+    private void SpawnSphere(Vector3 position)
+    {
+        NetworkScene.Spawn(sphere, position, Quaternion.identity);
     }
 }

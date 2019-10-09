@@ -11,18 +11,13 @@ namespace SNet.Core.Editor
             var identities = Object.FindObjectsOfType<SNetIdentity>();
             foreach (var identity in identities)
             {
-                if (!VerifyAssetId(identity.AssetId))
+                if (!identity.AssetId.IsValid())
                 {
                     Debug.LogWarning($"GameObject {identity.name} has invalid assetId");
                 }
                 
                 identity.gameObject.SetActive(false);
             }
-        }
-
-        private static bool VerifyAssetId(string assetId)
-        {
-            return assetId != null;
         }
     }
 }

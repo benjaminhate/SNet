@@ -323,7 +323,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cee9a7e212b75df458bb36ed167798c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cube: {fileID: 4945509566497612358, guid: d7ec15148211bd946b11d797b1d1d0f9, type: 3}
+  cube: {fileID: 7542699933010661092, guid: d7ec15148211bd946b11d797b1d1d0f9, type: 3}
+  sphere: {fileID: 2155921943741157295, guid: 03a4d91d291a07049acccab06342e6dc, type: 3}
   distance: 5
 --- !u!4 &2069632439
 Transform:

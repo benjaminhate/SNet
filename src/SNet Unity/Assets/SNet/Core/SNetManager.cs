@@ -31,6 +31,9 @@ namespace SNet.Core
         public bool IsServerActive => _isServer && Server != null && Server.IsActive;
         public bool IsClientActive => _isClient && Client != null && Client.IsActive;
 
+        public static bool IsClient => Instance.IsClientActive;
+        public static bool IsServer => Instance.IsServerActive;
+        
         public string NetworkAddress => networkAddress;
         public ushort NetworkPort => networkPort;
 

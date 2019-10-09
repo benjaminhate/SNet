@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using SNet.Core;
 using SNet.Core.Events;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ public class ChangeColorController : MonoBehaviour
     {
         _renderer = GetComponent<Renderer>();
         
-        if (sNetColorEntity?.IsServer == true)
+        if (SNetManager.IsServer)
             StartCoroutine(nameof(ChangeColor));
     }
 

@@ -7,10 +7,9 @@ namespace SNet.Core
     public abstract class SNetEntity : MonoBehaviour
     {
         public bool IsLocalClient { get; private set; } // To know if we are going to Predict or Interpolation the entity
-        public bool IsServer => SNetManager.IsServerActive;
-        public bool IsClient => SNetManager.IsClientActive;
+        protected static bool IsServer => SNetManager.IsServer;
+        protected static bool IsClient => SNetManager.IsClient;
 
-        protected readonly SNetManager SNetManager = SNetManager.Instance;
         protected SNetIdentity Identity;
 
         public void Initialize()
