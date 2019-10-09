@@ -123,22 +123,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPredictive: 0
   assetId:
-    i0: 0
-    i1: 0
-    i2: 0
-    i3: 0
-    i4: 0
-    i5: 0
-    i6: 0
-    i7: 0
-    i8: 0
-    i9: 0
-    i10: 0
-    i11: 0
-    i12: 0
-    i13: 0
-    i14: 0
-    i15: 0
+    i0: 3
+    i1: 164
+    i2: 217
+    i3: 29
+    i4: 41
+    i5: 26
+    i6: 7
+    i7: 4
+    i8: 154
+    i9: 204
+    i10: 202
+    i11: 176
+    i12: 99
+    i13: 66
+    i14: 230
+    i15: 220
 --- !u!114 &2155921943741157294
 MonoBehaviour:
   m_ObjectHideFlags: 0
