@@ -117,6 +117,7 @@ namespace SNet.Core.Editor
             _identityInfos = new List<NetworkIdentityInfo>();
             
             _identityInfos.Add(GetStringInfo("AssetID", netId.AssetId.ToString()));
+            _identityInfos.Add(GetStringInfo("SceneID", netId.SceneId.ToString()));
             
             if (!Application.isPlaying)
             {

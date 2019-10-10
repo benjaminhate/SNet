@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Linq;
 using SNet.Core.Common;
 using SNet.Core.Models;
 using SNet.Core.Models.Network;
 using SNet.Core.Models.Router;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SNet.Core
 {
@@ -25,6 +27,8 @@ namespace SNet.Core
         private bool _isClient;
         private bool _isServer;
 
+        private List<SNetIdentity> _sceneObjects;
+
         public ClientNetwork Client { get; private set; }
         public ServerNetwork Server { get; private set; }
 
@@ -44,6 +48,10 @@ namespace SNet.Core
             if(dontDestroyOnLoad)
                 DontDestroyOnLoad(gameObject);
             Application.runInBackground = runInBackground;
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
+
+            SceneObjectsProcess();
         }
 
         private void Update()
@@ -62,6 +70,33 @@ namespace SNet.Core
                 Server.Quit();
         }
 
+        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            SceneObjectsProcess();
+        }
+
+        private void SceneObjectsProcess()
+        {
+            LoadSceneObjects();
+
+            if (IsServerActive)
+                SpawnSceneObjects();
+        }
+
+        private void LoadSceneObjects()
+        {
+            _sceneObjects = Resources.FindObjectsOfTypeAll<SNetIdentity>().ToList();
+        }
+
+        private void SpawnSceneObjects()
+        {
+            foreach (var obj in _sceneObjects.Where(obj => obj.SceneId.IsValid()))
+            {
+                obj.gameObject.SetActive(true);
+                // Spawn message will be send automatically by SNetIdentity on Awake
+            }
+        }
+
         #region Client
         public static void StartClient()
         {
@@ -74,7 +109,7 @@ namespace SNet.Core
             Client = new ClientNetwork();
             
             Client.OnConnect += data => Debug.Log($"Connected to server {data.PeerId}");
-            Client.OnReceive += data => Debug.Log($"Received message from server {data.PeerId}");
+//            Client.OnReceive += data => Debug.Log($"Received message from server {data.PeerId}");
             
             NetworkRouter.RegisterByChannel(ChannelType.SNetIdentity, SpawnMessageHeader, SpawnEntity);
             
@@ -88,9 +123,44 @@ namespace SNet.Core
         {
             var idMsg = new ObjectSpawnMessage();
             idMsg.Deserialize(data);
-            var prefab = spawnList.Find(go => go.GetComponent<SNetIdentity>().AssetId == idMsg.AssetId);
-            var newObj = NetworkScene.Spawn(prefab, idMsg.Position, idMsg.Rotation);
+            GameObject newObj;
+            if (IsSceneObject(idMsg, out var prefab))
+            {
+                // Object is in Scene -> activate it
+                newObj = prefab;
+                newObj.transform.position = idMsg.Position;
+                newObj.transform.rotation = idMsg.Rotation;
+                newObj.SetActive(true);
+            }
+            else if(prefab != null)
+            {
+                // Object is Prefab -> Instantiate
+                newObj = NetworkScene.Spawn(prefab, idMsg.Position, idMsg.Rotation);
+            }
+            else
+            {
+                // No Object found with AssetId
+                return;
+            }
             newObj.GetComponent<SNetIdentity>().Initialize(idMsg.Id);
+        }
+
+        private bool IsSceneObject(ObjectSpawnMessage idMsg, out GameObject obj)
+        {
+            if (idMsg.SceneId.IsValid())
+            {
+                obj = _sceneObjects.Find(o => o.SceneId == idMsg.SceneId)?.gameObject;
+                if (obj != null) return true;
+            }
+
+            if (idMsg.AssetId.IsValid())
+            {
+                obj = spawnList.Find(go => go.GetComponent<SNetIdentity>()?.AssetId == idMsg.AssetId);
+                return false;
+            }
+
+            obj = null;
+            return false;
         }
         #endregion
 

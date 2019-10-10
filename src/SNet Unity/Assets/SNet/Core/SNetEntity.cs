@@ -10,30 +10,39 @@ namespace SNet.Core
         protected static bool IsServer => SNetManager.IsServer;
         protected static bool IsClient => SNetManager.IsClient;
 
-        protected SNetIdentity Identity;
+        protected string InternalId => $"{Identity.Id}.{ComponentId}";
 
-        public void Initialize()
+        protected SNetIdentity Identity;
+        protected int ComponentId;
+        protected bool Initialized;
+
+        public void Initialize(int componentId)
         {
             // TODO Self Registration
             // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
             Identity = GetComponent<SNetIdentity>();
 
+            ComponentId = componentId;
+
             Setup();
+
+            Initialized = true;
         }
 
         public abstract void Setup();
 
         protected void NetworkRouterRegister(RouterCallback callback)
         {
-            NetworkRouter.Register(Identity.Id, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
+            NetworkRouter.Register(InternalId, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
         }
 
         #region SERVER STUFF
 
         protected void ServerBroadcastSerializable(byte[] data)
         {
-            NetworkRouter.Send(Identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            if(Initialized)
+                NetworkRouter.Send(InternalId, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnServerReceive(byte[] data);
@@ -48,7 +57,8 @@ namespace SNet.Core
         
         protected void ClientSendSerializable(byte[] data)
         {
-            NetworkRouter.Send(Identity.Id, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            if(Initialized)
+                NetworkRouter.Send(InternalId, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnClientReceive(byte[] data);

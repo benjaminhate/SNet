@@ -14,6 +14,7 @@ namespace SNet.Core.Models
     {
         public string Id;
         public NetworkHash128 AssetId;
+        public NetworkSceneId SceneId;
         public SerializableVector3 Position;
         public SerializableQuaternion Rotation;
         
@@ -28,6 +29,7 @@ namespace SNet.Core.Models
             var idMsg = NetworkBinary.Deserialize<ObjectSpawnMessage>(array, ref shift);
             Id = idMsg.Id;
             AssetId = idMsg.AssetId;
+            SceneId = idMsg.SceneId;
             Position = idMsg.Position;
             Rotation = idMsg.Rotation;
         }

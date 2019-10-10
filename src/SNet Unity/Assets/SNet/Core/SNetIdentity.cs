@@ -15,6 +15,12 @@ namespace SNet.Core
 
         [SerializeField] private NetworkHash128 assetId;
 
+        [SerializeField] private NetworkSceneId sceneId;
+
+        private int entityId;
+
+        public NetworkSceneId SceneId => sceneId;
+
         public NetworkHash128 AssetId
         {
             get
@@ -32,7 +38,7 @@ namespace SNet.Core
         private static bool IsClient => SNetManager.IsClient;
         private static bool IsServer => SNetManager.IsServer;
         
-        private void Awake()
+        private void Start()
         {
             if (IsServer)
                 Initialize(GenerateNewId());
@@ -50,9 +56,11 @@ namespace SNet.Core
             {
                 Id = id,
                 AssetId = AssetId,
+                SceneId = SceneId,
                 Position = trans.position,
                 Rotation = trans.rotation
             };
+            Debug.Log($"Sending spawn message : {msg.Id}, {msg.AssetId}, {msg.SceneId}");
             NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SNetManager.SpawnMessageHeader, msg);
         }
 
@@ -74,7 +82,7 @@ namespace SNet.Core
             var entities = GetComponents<SNetEntity>();
             foreach (var entity in entities)
             {
-                entity.Initialize();
+                entity.Initialize(entityId++);
             }
         }
 
@@ -82,12 +90,23 @@ namespace SNet.Core
         {
             return Guid.NewGuid().ToString();
         }
+
+        public void SetSceneId(uint id)
+        {
+            sceneId = new NetworkSceneId(id);
+        }
         
         #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            SetupID();
+        }
+
         private void SetupID()
         {
             if (ThisIsAPrefab())
             {
+                SetSceneId(0);
                 AssignAssetId(gameObject);
             }
             else if (ThisIsASceneObjectReferencingAPrefab(out var prefab))

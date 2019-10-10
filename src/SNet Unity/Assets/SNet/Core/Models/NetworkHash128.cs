@@ -6,6 +6,7 @@ namespace SNet.Core.Models
     [Serializable]
     public struct NetworkHash128
     {
+
         // struct cannot have embedded arrays..
         public byte i0;
         public byte i1;
@@ -100,6 +101,55 @@ namespace SNet.Core.Models
         {
             return
                 $"{i0:x2}{i1:x2}{i2:x2}{i3:x2}{i4:x2}{i5:x2}{i6:x2}{i7:x2}{i8:x2}{i9:x2}{i10:x2}{i11:x2}{i12:x2}{i13:x2}{i14:x2}{i15:x2}";
+        }
+        
+        public bool Equals(NetworkHash128 other)
+        {
+            return i0 == other.i0 &&
+                   i1 == other.i1 &&
+                   i2 == other.i2 &&
+                   i3 == other.i3 &&
+                   i4 == other.i4 &&
+                   i5 == other.i5 &&
+                   i6 == other.i6 &&
+                   i7 == other.i7 &&
+                   i8 == other.i8 &&
+                   i9 == other.i9 &&
+                   i10 == other.i10 &&
+                   i11 == other.i11 &&
+                   i12 == other.i12 &&
+                   i13 == other.i13 &&
+                   i14 == other.i14 &&
+                   i15 == other.i15;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is NetworkHash128 other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = i0.GetHashCode();
+                hashCode = (hashCode * 397) ^ i1.GetHashCode();
+                hashCode = (hashCode * 397) ^ i2.GetHashCode();
+                hashCode = (hashCode * 397) ^ i3.GetHashCode();
+                hashCode = (hashCode * 397) ^ i4.GetHashCode();
+                hashCode = (hashCode * 397) ^ i5.GetHashCode();
+                hashCode = (hashCode * 397) ^ i6.GetHashCode();
+                hashCode = (hashCode * 397) ^ i7.GetHashCode();
+                hashCode = (hashCode * 397) ^ i8.GetHashCode();
+                hashCode = (hashCode * 397) ^ i9.GetHashCode();
+                hashCode = (hashCode * 397) ^ i10.GetHashCode();
+                hashCode = (hashCode * 397) ^ i11.GetHashCode();
+                hashCode = (hashCode * 397) ^ i12.GetHashCode();
+                hashCode = (hashCode * 397) ^ i13.GetHashCode();
+                hashCode = (hashCode * 397) ^ i14.GetHashCode();
+                hashCode = (hashCode * 397) ^ i15.GetHashCode();
+                return hashCode;
+            }
         }
 
         public static bool operator ==(NetworkHash128 a, NetworkHash128 b)

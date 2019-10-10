@@ -1,22 +1,28 @@
-﻿using UnityEditor.Callbacks;
+﻿using System.Linq;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 namespace SNet.Core.Editor
 {
-    public static class NetworkScenePostProcess
+    public class NetworkScenePostProcess : MonoBehaviour
     {
         [PostProcessScene]
         public static void OnPostProcessScene()
         {
-            var identities = Object.FindObjectsOfType<SNetIdentity>();
-            foreach (var identity in identities)
+            Debug.Log("Starting PostProcessScene");
+            var identities = FindObjectsOfType<SNetIdentity>();
+            var sceneId = 1u;
+            
+            foreach (var identity in identities.OrderBy(id => id.name))
             {
-                if (!identity.AssetId.IsValid())
+                if (identity.GetComponent<SNetManager>() != null)
                 {
-                    Debug.LogWarning($"GameObject {identity.name} has invalid assetId");
+                    Debug.LogError($"SNetManager has a component SNetIdentity. This will cause the SNetManager to be disabled, so it is not recommended.");
                 }
                 
+                Debug.Log($"Setting scene ID {sceneId} for {identity.name}");
                 identity.gameObject.SetActive(false);
+                identity.SetSceneId(sceneId++);
             }
         }
     }
