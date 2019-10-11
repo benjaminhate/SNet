@@ -34,4 +34,22 @@ namespace SNet.Core.Models
             Rotation = idMsg.Rotation;
         }
     }
+
+    public class EmptyMessage : MessageBase
+    {
+        public override byte[] Serialize()
+        {
+            return new byte[0];
+        }
+
+        public override void Deserialize(byte[] array)
+        {
+            
+        }
+    }
+
+    public class ReadyMessage : EmptyMessage
+    {
+        
+    }
 }

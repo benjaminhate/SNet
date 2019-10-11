@@ -6,6 +6,7 @@ namespace SNet.Core.Models.Router
     {
         public static ChannelType Base = new ChannelType(0, "Base");
         public static ChannelType SNetIdentity = new ChannelType(1, "SNetIdentity");
+        public static ChannelType SNetReady = new ChannelType(2, "SNetReady");
         
         public ChannelType(int id, string name) : base(id, name)
         {

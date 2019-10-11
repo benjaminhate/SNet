@@ -9,7 +9,6 @@ namespace SNet.Core.Editor
         [PostProcessScene]
         public static void OnPostProcessScene()
         {
-            Debug.Log("Starting PostProcessScene");
             var identities = FindObjectsOfType<SNetIdentity>();
             var sceneId = 1u;
             
@@ -20,7 +19,7 @@ namespace SNet.Core.Editor
                     Debug.LogError($"SNetManager has a component SNetIdentity. This will cause the SNetManager to be disabled, so it is not recommended.");
                 }
                 
-                Debug.Log($"Setting scene ID {sceneId} for {identity.name}");
+//                Debug.Log($"Setting scene ID {sceneId} for {identity.name}");
                 identity.gameObject.SetActive(false);
                 identity.SetSceneId(sceneId++);
             }

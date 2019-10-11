@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using SNet.Core;
+﻿using SNet.Core;
 using UnityEngine;
 
 public class CubeSpawner : MonoBehaviour

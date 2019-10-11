@@ -149,6 +149,11 @@ namespace SNet.Core.Models.Router
         {
             Instance.SendDataToPeerIdByChannel(channel, header, obj, peerId, flags);
         }
+        
+        public static void SendByChannel(byte channel, string header, MessageBase msg, uint peerId, PacketFlags flags = PacketFlags.None)
+        {
+            SendByChannel(channel, header, msg.Serialize(), peerId, flags);
+        }
 
         public static void SendByChannel(byte channel, string header, byte[] obj, PacketFlags flags = PacketFlags.None,
             bool filter = true)

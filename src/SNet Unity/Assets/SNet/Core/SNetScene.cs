@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using SNet.Core.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SNet.Core
 {
     public class SNetScene
     {
+        public static string sceneName;
+        
         private static readonly Dictionary<SNetHash128, GameObject> GuidToPrefab = new Dictionary<SNetHash128, GameObject>();
+
+        public static AsyncOperation LoadSceneOperation { get; private set; }
         
         public static GameObject Spawn(GameObject go, Vector3 position, Quaternion rotation)
         {
@@ -33,6 +39,29 @@ namespace SNet.Core
 
             prefab = GuidToPrefab[assetId];
             return true;
+        }
+
+        public static void UpdateScene()
+        {
+            if (LoadSceneOperation == null)
+                return;
+            if (!LoadSceneOperation.isDone)
+                return;
+
+            SNetManager.Instance.FinishSceneLoad();
+            LoadSceneOperation.allowSceneActivation = true;
+            LoadSceneOperation = null;
+        }
+
+        public static void ChangeScene(string newSceneName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+        {
+            sceneName = newSceneName;
+            LoadSceneOperation = SceneManager.LoadSceneAsync(newSceneName, loadSceneMode);
+        }
+        public static void ChangeScene(int newSceneIndex, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+        {
+            sceneName = SceneManager.GetSceneAt(newSceneIndex).name;
+            LoadSceneOperation = SceneManager.LoadSceneAsync(newSceneIndex, loadSceneMode);
         }
     }
 }

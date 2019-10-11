@@ -4,7 +4,6 @@ using SNet.Core.Common;
 using SNet.Core.Models;
 using SNet.Core.Models.Network;
 using SNet.Core.Models.Router;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -42,6 +41,7 @@ namespace SNet.Core
         public ushort NetworkPort => networkPort;
 
         public static string SpawnMessageHeader => "";
+        public static string ReadyMessageHeader => "";
 
         private void Start()
         {
@@ -65,6 +65,7 @@ namespace SNet.Core
                 Client.Update();
             if(IsServerActive)
                 Server.Update();
+            SNetScene.UpdateScene();
         }
 
         private void OnDestroy()
@@ -178,8 +179,26 @@ namespace SNet.Core
             Server.OnDisconnect += ServerOnClientDisconnect;
             Server.OnTimeout += ServerOnClientTimeout;
             Server.OnReceive += ServerOnClientReceive;
+            
+            NetworkRouter.RegisterByChannel(ChannelType.SNetReady, ReadyMessageHeader, OnClientReadyMessageReceive);
 
             Server.Listen(networkAddress, networkPort, maxConnections, maxChannels);
+        }
+
+        private void OnClientReadyMessageReceive(uint peerId, byte[] data)
+        {
+            Debug.Log($"Client {peerId} is ready");
+            foreach (var msg in from netId in FindObjectsOfType<SNetIdentity>() select new ObjectSpawnMessage
+            {
+                Id = netId.Id,
+                AssetId = netId.AssetId,
+                SceneId = netId.SceneId,
+                Position = netId.transform.position,
+                Rotation = netId.transform.rotation
+            })
+            {
+                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SpawnMessageHeader, msg, peerId);
+            }
         }
 
         internal virtual void ServerOnClientConnect(ServerEventData data)
@@ -203,5 +222,30 @@ namespace SNet.Core
             
         }
         #endregion
+
+        public void FinishSceneLoad()
+        {
+            if (IsServer)
+            {
+                OnServerSceneLoaded(SNetScene.sceneName);
+            }
+
+            if (IsClient)
+            {
+                OnClientSceneLoaded();
+            }
+        }
+
+        public virtual void OnServerSceneLoaded(string sceneName)
+        {
+            
+        }
+
+        public virtual void OnClientSceneLoaded()
+        {
+            var msg = new ReadyMessage();
+            NetworkRouter.SendByChannel(ChannelType.SNetReady, ReadyMessageHeader, msg);
+            Debug.Log("Client ready !");
+        }
     }
 }
