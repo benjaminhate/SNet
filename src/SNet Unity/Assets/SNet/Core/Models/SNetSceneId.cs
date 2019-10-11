@@ -4,12 +4,12 @@ using UnityEngine;
 namespace SNet.Core.Models
 {
     [Serializable]
-    public struct NetworkSceneId
+    public struct SNetSceneId
     {
 
         [SerializeField] private uint value;
 
-        public NetworkSceneId(uint value)
+        public SNetSceneId(uint value)
         {
             this.value = value;
         }
@@ -24,14 +24,14 @@ namespace SNet.Core.Models
             return !IsEmpty();
         }
 
-        public bool Equals(NetworkSceneId other)
+        public bool Equals(SNetSceneId other)
         {
             return value == other.value;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is NetworkSceneId other && Equals(other);
+            return obj is SNetSceneId other && Equals(other);
         }
         
         public override int GetHashCode()
@@ -39,12 +39,12 @@ namespace SNet.Core.Models
             return (int)value;
         }
 
-        public static bool operator==(NetworkSceneId c1, NetworkSceneId c2)
+        public static bool operator==(SNetSceneId c1, SNetSceneId c2)
         {
             return c1.value == c2.value;
         }
 
-        public static bool operator!=(NetworkSceneId c1, NetworkSceneId c2)
+        public static bool operator!=(SNetSceneId c1, SNetSceneId c2)
         {
             return c1.value != c2.value;
         }

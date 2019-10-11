@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SNet.Core.Editor
 {
-    public class NetworkScenePostProcess : MonoBehaviour
+    public class SNetScenePostProcess : MonoBehaviour
     {
         [PostProcessScene]
         public static void OnPostProcessScene()

@@ -49,6 +49,11 @@ namespace SNet.Core
                 DontDestroyOnLoad(gameObject);
             Application.runInBackground = runInBackground;
 
+            foreach (var prefab in spawnList)
+            {
+                SNetScene.RegisterPrefab(prefab);
+            }
+
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             SceneObjectsProcess();
@@ -97,6 +102,18 @@ namespace SNet.Core
             }
         }
 
+        private bool GetSceneObject(SNetSceneId sceneId, out GameObject sceneObject)
+        {
+            sceneObject = null;
+            if (!sceneId.IsValid()) return false;
+
+            var obj = _sceneObjects.Find(o => o.SceneId == sceneId);
+            if (obj == null) return false;
+
+            sceneObject = obj.gameObject;
+            return true;
+        }
+
         #region Client
         public static void StartClient()
         {
@@ -124,7 +141,7 @@ namespace SNet.Core
             var idMsg = new ObjectSpawnMessage();
             idMsg.Deserialize(data);
             GameObject newObj;
-            if (IsSceneObject(idMsg, out var prefab))
+            if (GetSceneObject(idMsg.SceneId, out var prefab))
             {
                 // Object is in Scene -> activate it
                 newObj = prefab;
@@ -132,10 +149,10 @@ namespace SNet.Core
                 newObj.transform.rotation = idMsg.Rotation;
                 newObj.SetActive(true);
             }
-            else if(prefab != null)
+            else if(SNetScene.GetPrefab(idMsg.AssetId, out prefab))
             {
                 // Object is Prefab -> Instantiate
-                newObj = NetworkScene.Spawn(prefab, idMsg.Position, idMsg.Rotation);
+                newObj = SNetScene.Spawn(prefab, idMsg.Position, idMsg.Rotation);
             }
             else
             {
@@ -143,24 +160,6 @@ namespace SNet.Core
                 return;
             }
             newObj.GetComponent<SNetIdentity>().Initialize(idMsg.Id);
-        }
-
-        private bool IsSceneObject(ObjectSpawnMessage idMsg, out GameObject obj)
-        {
-            if (idMsg.SceneId.IsValid())
-            {
-                obj = _sceneObjects.Find(o => o.SceneId == idMsg.SceneId)?.gameObject;
-                if (obj != null) return true;
-            }
-
-            if (idMsg.AssetId.IsValid())
-            {
-                obj = spawnList.Find(go => go.GetComponent<SNetIdentity>()?.AssetId == idMsg.AssetId);
-                return false;
-            }
-
-            obj = null;
-            return false;
         }
         #endregion
 

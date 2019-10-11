@@ -13,8 +13,8 @@ namespace SNet.Core.Models
     public class ObjectSpawnMessage : MessageBase
     {
         public string Id;
-        public NetworkHash128 AssetId;
-        public NetworkSceneId SceneId;
+        public SNetHash128 AssetId;
+        public SNetSceneId SceneId;
         public SerializableVector3 Position;
         public SerializableQuaternion Rotation;
         

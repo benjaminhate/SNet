@@ -18,7 +18,6 @@ namespace SNet.Core
 
         public void Initialize(int componentId)
         {
-            // TODO Self Registration
             // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
             Identity = GetComponent<SNetIdentity>();

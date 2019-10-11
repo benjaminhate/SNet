@@ -6,9 +6,9 @@ using UnityEngine;
 namespace SNet.Core.Editor
 {
     [CustomPreview(typeof(GameObject))]
-    public class NetworkInformationPreview : ObjectPreview
+    public class SNetInformationPreview : ObjectPreview
     {
-        private class NetworkIdentityInfo
+        private class SNetIdentityInfo
         {
             public GUIContent Name;
             public GUIContent Value;
@@ -43,7 +43,7 @@ namespace SNet.Core.Editor
             }
         }
 
-        private List<NetworkIdentityInfo> _identityInfos;
+        private List<SNetIdentityInfo> _identityInfos;
         private GUIContent _title;
         private Styles _styles = new Styles();
         
@@ -114,7 +114,7 @@ namespace SNet.Core.Editor
             var netId = gameObject.GetComponent<SNetIdentity>();
             if (netId == null) return;
 
-            _identityInfos = new List<NetworkIdentityInfo>();
+            _identityInfos = new List<SNetIdentityInfo>();
             
             _identityInfos.Add(GetStringInfo("AssetID", netId.AssetId.ToString()));
             _identityInfos.Add(GetStringInfo("SceneID", netId.SceneId.ToString()));
@@ -127,9 +127,9 @@ namespace SNet.Core.Editor
             _identityInfos.Add(GetStringInfo("NetworkID", netId.Id));
         }
 
-        private NetworkIdentityInfo GetStringInfo(string name, string value)
+        private SNetIdentityInfo GetStringInfo(string name, string value)
         {
-            return new NetworkIdentityInfo
+            return new SNetIdentityInfo
             {
                 Name = new GUIContent(name),
                 Value = new GUIContent(value)

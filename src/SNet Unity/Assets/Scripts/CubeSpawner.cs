@@ -17,6 +17,8 @@ public class CubeSpawner : MonoBehaviour
     {
         _camera = Camera.main;
         _isServer = SNetManager.IsServer;
+        
+        SNetScene.RegisterPrefab(sphere);
     }
 
     private void Update()
@@ -38,11 +40,11 @@ public class CubeSpawner : MonoBehaviour
 
     private void SpawnCube(Vector3 position)
     {
-        NetworkScene.Spawn(cube, position, Quaternion.identity);
+        SNetScene.Spawn(cube, position, Quaternion.identity);
     }
     
     private void SpawnSphere(Vector3 position)
     {
-        NetworkScene.Spawn(sphere, position, Quaternion.identity);
+        SNetScene.Spawn(sphere, position, Quaternion.identity);
     }
 }

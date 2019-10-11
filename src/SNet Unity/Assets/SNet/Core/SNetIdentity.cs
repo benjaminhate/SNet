@@ -13,15 +13,15 @@ namespace SNet.Core
         public bool isPredictive;
         public string Id { get; private set; }
 
-        [SerializeField] private NetworkHash128 assetId;
+        [SerializeField] private SNetHash128 assetId;
 
-        [SerializeField] private NetworkSceneId sceneId;
+        [SerializeField] private SNetSceneId sceneId;
 
         private int entityId;
 
-        public NetworkSceneId SceneId => sceneId;
+        public SNetSceneId SceneId => sceneId;
 
-        public NetworkHash128 AssetId
+        public SNetHash128 AssetId
         {
             get
             {
@@ -93,7 +93,7 @@ namespace SNet.Core
 
         public void SetSceneId(uint id)
         {
-            sceneId = new NetworkSceneId(id);
+            sceneId = new SNetSceneId(id);
         }
         
         #if UNITY_EDITOR
@@ -140,7 +140,7 @@ namespace SNet.Core
         private void AssignAssetId(Object prefab)
         {
             var path = AssetDatabase.GetAssetPath(prefab);
-            assetId = NetworkHash128.Parse(AssetDatabase.AssetPathToGUID(path));
+            assetId = SNetHash128.Parse(AssetDatabase.AssetPathToGUID(path));
         }
         #endif
     }

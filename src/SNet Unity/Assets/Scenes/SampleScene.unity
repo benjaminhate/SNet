@@ -399,7 +399,6 @@ MonoBehaviour:
   runInBackground: 1
   spawnList:
   - {fileID: 7542699933010661092, guid: d7ec15148211bd946b11d797b1d1d0f9, type: 3}
-  - {fileID: 2155921943741157295, guid: 03a4d91d291a07049acccab06342e6dc, type: 3}
 --- !u!4 &1616593965
 Transform:
   m_ObjectHideFlags: 0

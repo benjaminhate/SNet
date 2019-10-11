@@ -4,7 +4,7 @@ namespace SNet.Core.Models
 {
     // unrolled for your pleasure.
     [Serializable]
-    public struct NetworkHash128
+    public struct SNetHash128
     {
 
         // struct cannot have embedded arrays..
@@ -61,9 +61,9 @@ namespace SNet.Core.Models
             return 0;
         }
 
-        public static NetworkHash128 Parse(string text)
+        public static SNetHash128 Parse(string text)
         {
-            NetworkHash128 hash;
+            SNetHash128 hash;
 
             // add leading zeros if required
             var l = text.Length;
@@ -103,7 +103,7 @@ namespace SNet.Core.Models
                 $"{i0:x2}{i1:x2}{i2:x2}{i3:x2}{i4:x2}{i5:x2}{i6:x2}{i7:x2}{i8:x2}{i9:x2}{i10:x2}{i11:x2}{i12:x2}{i13:x2}{i14:x2}{i15:x2}";
         }
         
-        public bool Equals(NetworkHash128 other)
+        public bool Equals(SNetHash128 other)
         {
             return i0 == other.i0 &&
                    i1 == other.i1 &&
@@ -125,7 +125,7 @@ namespace SNet.Core.Models
 
         public override bool Equals(object obj)
         {
-            return obj is NetworkHash128 other && Equals(other);
+            return obj is SNetHash128 other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -152,7 +152,7 @@ namespace SNet.Core.Models
             }
         }
 
-        public static bool operator ==(NetworkHash128 a, NetworkHash128 b)
+        public static bool operator ==(SNetHash128 a, SNetHash128 b)
         {
             return a.i0 == b.i0 &&
                    a.i1 == b.i1 &&
@@ -172,7 +172,7 @@ namespace SNet.Core.Models
                    a.i15 == b.i15;
         }
 
-        public static bool operator !=(NetworkHash128 a, NetworkHash128 b)
+        public static bool operator !=(SNetHash128 a, SNetHash128 b)
         {
             return !(a == b);
         }
