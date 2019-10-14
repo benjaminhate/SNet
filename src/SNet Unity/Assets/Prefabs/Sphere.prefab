@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2155921943741157292}
   - component: {fileID: 2155921943741157293}
   - component: {fileID: 2155921943741157294}
-  - component: {fileID: 7426900634114184086}
+  - component: {fileID: 3053755266451841158}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -110,7 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secondsToChange: 0.5
   sNetColorEntity: {fileID: 2155921943741157294}
-  sNetIntEvent: {fileID: 7426900634114184086}
+  sNetFloatEvent: {fileID: 3053755266451841158}
 --- !u!114 &2155921943741157293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,22 +125,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPredictive: 0
   assetId:
-    i0: 3
-    i1: 164
-    i2: 217
-    i3: 29
-    i4: 41
-    i5: 26
-    i6: 7
-    i7: 4
-    i8: 154
-    i9: 204
-    i10: 202
-    i11: 176
-    i12: 99
-    i13: 66
-    i14: 230
-    i15: 220
+    i0: 0
+    i1: 0
+    i2: 0
+    i3: 0
+    i4: 0
+    i5: 0
+    i6: 0
+    i7: 0
+    i8: 0
+    i9: 0
+    i10: 0
+    i11: 0
+    i12: 0
+    i13: 0
+    i14: 0
+    i15: 0
+  sceneId:
+    value: 0
 --- !u!114 &2155921943741157294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +169,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &7426900634114184086
+--- !u!114 &3053755266451841158
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,7 +178,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2155921943741157295}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38dc438b7c1c7904fb55af641d5f54ee, type: 3}
+  m_Script: {fileID: 11500000, guid: e25a374e66114511b653ee283b41bd95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   clientReceiveCallback:
@@ -186,7 +188,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2155921943741157292}
-        m_MethodName: ChangeIntServer
+        m_MethodName: ChangeFloatServer
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -1,4 +1,5 @@
 ﻿using SNet.Core;
+using SNet.Core.Models;
 using UnityEngine;
 
 public class CubeSpawner : MonoBehaviour

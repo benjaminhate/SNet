@@ -1,4 +1,5 @@
 ﻿using SNet.Core;
+using SNet.Core.Models;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

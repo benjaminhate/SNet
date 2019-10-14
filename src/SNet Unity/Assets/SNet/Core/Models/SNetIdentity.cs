@@ -1,11 +1,10 @@
 using System;
-using SNet.Core.Models;
 using SNet.Core.Models.Router;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace SNet.Core
+namespace SNet.Core.Models
 {
     // Network Identity for SNet entities
     public class SNetIdentity : MonoBehaviour
@@ -60,7 +59,6 @@ namespace SNet.Core
                 Position = trans.position,
                 Rotation = trans.rotation
             };
-            Debug.Log($"Sending spawn message : {msg.Id}, {msg.AssetId}, {msg.SceneId}");
             NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SNetManager.SpawnMessageHeader, msg);
         }
 

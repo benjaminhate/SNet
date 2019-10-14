@@ -112,7 +112,7 @@ namespace SNet.Core.Models.Network
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.Log("ERROR Update : " + e);
+                UnityEngine.Debug.LogError("ERROR Update : " + e);
             }
         }
 
@@ -146,7 +146,7 @@ namespace SNet.Core.Models.Network
             }
             catch(Exception e)
             {
-                UnityEngine.Debug.Log("ERROR Send : " + e);
+                UnityEngine.Debug.LogError("ERROR Send : " + e);
             }
         }
 
@@ -160,7 +160,7 @@ namespace SNet.Core.Models.Network
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.Log("ERROR Broadcast : " + e);
+                UnityEngine.Debug.LogError("ERROR Broadcast : " + e);
             }
         }
 

@@ -130,11 +130,12 @@ namespace SNet.Core.Models.Router
         private void PeerReceiveData(uint peerId, byte channelId, byte[] data)
         {
             _wrapper.CreatePayload(data);
-            Debug.Log($"Message from channel {channelId} and header {_wrapper.Header}");
+//            Debug.Log($"Message from channel {channelId} and header {_wrapper.Header}");
             Publish(peerId, channelId, _wrapper.Header, _wrapper.Payload);
         }
 
-
+        ///////////////////////////////////    STATIC FUNCTIONS    /////////////////////////////////////////////////////
+        
         public static void RegisterByChannel(byte channel, string header, RouterCallback routerCallback)
         {
             Instance.RegisterCallbackByChannel(channel, header, routerCallback);

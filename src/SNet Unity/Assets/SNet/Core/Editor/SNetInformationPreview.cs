@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SNet.Core.Models;
 using UnityEditor;
 using UnityEngine;
 

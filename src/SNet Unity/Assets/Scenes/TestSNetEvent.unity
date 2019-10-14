@@ -308,8 +308,8 @@ GameObject:
   - component: {fileID: 2025876693}
   - component: {fileID: 2025876692}
   - component: {fileID: 2025876691}
-  - component: {fileID: 2025876690}
   - component: {fileID: 2025876689}
+  - component: {fileID: 2025876690}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   secondsToChange: 1
   sNetColorEntity: {fileID: 2025876691}
-  sNetIntEvent: {fileID: 2025876690}
+  sNetFloatEvent: {fileID: 2025876690}
 --- !u!114 &2025876690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2025876688}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38dc438b7c1c7904fb55af641d5f54ee, type: 3}
+  m_Script: {fileID: 11500000, guid: e25a374e66114511b653ee283b41bd95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   clientReceiveCallback:
@@ -351,7 +351,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2025876689}
-        m_MethodName: ChangeIntServer
+        m_MethodName: ChangeFloatServer
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

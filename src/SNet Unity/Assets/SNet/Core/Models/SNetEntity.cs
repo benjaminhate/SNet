@@ -1,7 +1,7 @@
 using SNet.Core.Models.Router;
 using UnityEngine;
 
-namespace SNet.Core
+namespace SNet.Core.Models
 {
     [RequireComponent(typeof(SNetIdentity))]
     public abstract class SNetEntity : MonoBehaviour

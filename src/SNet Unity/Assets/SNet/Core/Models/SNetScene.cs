@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using SNet.Core.Models;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace SNet.Core
+namespace SNet.Core.Models
 {
     public class SNetScene
     {

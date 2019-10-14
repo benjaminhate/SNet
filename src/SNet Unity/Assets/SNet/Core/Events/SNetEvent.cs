@@ -1,3 +1,4 @@
+using SNet.Core.Models;
 using SNet.Core.Models.Router;
 
 namespace SNet.Core.Events
