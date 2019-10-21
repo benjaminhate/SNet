@@ -6,15 +6,16 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class ChangeColorController : MonoBehaviour
 {
-    [SerializeField] private float secondsToChange = .5f;
+    [SerializeField] public float secondsToChange = .5f;
     [SerializeField] private SNetColorEvent sNetColorEntity;
-    [SerializeField] private SNetFloatEvent sNetFloatEvent;
 
     private Renderer _renderer;
+    private SendValueController _sendValueController;
 
     private void Start()
     {
         _renderer = GetComponent<Renderer>();
+        _sendValueController = GetComponent<SendValueController>();
         
         if (SNetManager.IsServer)
             StartCoroutine(nameof(ChangeColor));
@@ -38,11 +39,7 @@ public class ChangeColorController : MonoBehaviour
         if (_renderer != null)
             _renderer.material.color = serverColor;
 
-        sNetFloatEvent.ClientSend(Random.Range(0f, 2f));
-    }
-
-    public void ChangeFloatServer(float clientValue)
-    {
-        secondsToChange = clientValue;
+        if (_sendValueController != null) 
+            _sendValueController.SendValueToClient(Random.Range(0f, 2f));
     }
 }

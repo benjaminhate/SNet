@@ -6,7 +6,7 @@ namespace SNet.Core.Models
 {
     public class SNetScene
     {
-        public static string sceneName;
+        public static string SceneName;
         
         private static readonly Dictionary<SNetHash128, GameObject> GuidToPrefab = new Dictionary<SNetHash128, GameObject>();
 
@@ -53,12 +53,12 @@ namespace SNet.Core.Models
 
         public static void ChangeScene(string newSceneName, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
         {
-            sceneName = newSceneName;
+            SceneName = newSceneName;
             LoadSceneOperation = SceneManager.LoadSceneAsync(newSceneName, loadSceneMode);
         }
         public static void ChangeScene(int newSceneIndex, LoadSceneMode loadSceneMode = LoadSceneMode.Single)
         {
-            sceneName = SceneManager.GetSceneAt(newSceneIndex).name;
+            SceneName = SceneManager.GetSceneAt(newSceneIndex).name;
             LoadSceneOperation = SceneManager.LoadSceneAsync(newSceneIndex, loadSceneMode);
         }
     }

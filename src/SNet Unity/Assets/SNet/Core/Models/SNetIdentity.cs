@@ -12,11 +12,13 @@ namespace SNet.Core.Models
         public bool isPredictive;
         public string Id { get; private set; }
 
+        public bool IsLocalClient { get; private set; }
+
         [SerializeField] private SNetHash128 assetId;
 
         [SerializeField] private SNetSceneId sceneId;
 
-        private int entityId;
+        private int _entityId;
 
         public SNetSceneId SceneId => sceneId;
 
@@ -43,8 +45,10 @@ namespace SNet.Core.Models
                 Initialize(GenerateNewId());
         }
 
-        public void Initialize(string id)
+        public void Initialize(string id, bool isLocalClient = false)
         {
+            IsLocalClient = isLocalClient;
+            
             // TODO Initialize Called when Spawn Message is received on the client side
             Register(id);
             if (!IsServer) return;
@@ -59,7 +63,7 @@ namespace SNet.Core.Models
                 Position = trans.position,
                 Rotation = trans.rotation
             };
-            NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SNetManager.SpawnMessageHeader, msg);
+            NetworkRouter.SendByChannel(ChannelType.SNetIdentity, HeaderType.SpawnMessage, msg);
         }
 
         private void Register(string id)
@@ -80,7 +84,7 @@ namespace SNet.Core.Models
             var entities = GetComponents<SNetEntity>();
             foreach (var entity in entities)
             {
-                entity.Initialize(entityId++);
+                entity.Initialize(_entityId++);
             }
         }
 

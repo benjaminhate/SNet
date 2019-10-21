@@ -39,8 +39,8 @@ namespace SNet.Core.Models.Router
         {
             Init();
         }
-        
-        protected virtual void Init()
+
+        private void Init()
         {
             _callbacks = new Dictionary<byte, Dictionary<string, TypedCallbackHandlers>>();
             _wrapper = new RouterWrapper();
@@ -98,7 +98,7 @@ namespace SNet.Core.Models.Router
         private void Publish(uint peerId, byte channel, string header, byte[] array)
         {
             var structure = GetCallbacks(channel, header);
-
+            Debug.Log($"Received message in {channel} and {header} from {peerId}");
             structure?.Callbacks.ForEach(c => c.Func?.Invoke(peerId, array));
         }
 

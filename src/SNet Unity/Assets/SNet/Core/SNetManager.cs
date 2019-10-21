@@ -39,10 +39,7 @@ namespace SNet.Core
         
         public string NetworkAddress => networkAddress;
         public ushort NetworkPort => networkPort;
-
-        public static string SpawnMessageHeader => "";
-        public static string ReadyMessageHeader => "";
-
+        
         private void Start()
         {
             if(dontDestroyOnLoad)
@@ -129,7 +126,7 @@ namespace SNet.Core
             Client.OnConnect += data => Debug.Log($"Connected to server {data.PeerId}");
 //            Client.OnReceive += data => Debug.Log($"Received message from server {data.PeerId}");
             
-            NetworkRouter.RegisterByChannel(ChannelType.SNetIdentity, SpawnMessageHeader, SpawnEntity);
+            NetworkRouter.RegisterByChannel(ChannelType.SNetIdentity, HeaderType.SpawnMessage, SpawnEntity);
             
             Client.Create();
             
@@ -180,7 +177,7 @@ namespace SNet.Core
             Server.OnTimeout += ServerOnClientTimeout;
             Server.OnReceive += ServerOnClientReceive;
             
-            NetworkRouter.RegisterByChannel(ChannelType.SNetReady, ReadyMessageHeader, OnClientReadyMessageReceive);
+            NetworkRouter.RegisterByChannel(ChannelType.SNetReady, HeaderType.ReadyMessage, OnClientReadyMessageReceive);
 
             Server.Listen(networkAddress, networkPort, maxConnections, maxChannels);
         }
@@ -197,7 +194,7 @@ namespace SNet.Core
                 Rotation = netId.transform.rotation
             })
             {
-                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, SpawnMessageHeader, msg, peerId);
+                NetworkRouter.SendByChannel(ChannelType.SNetIdentity, HeaderType.SpawnMessage, msg, peerId);
             }
         }
 
@@ -227,7 +224,7 @@ namespace SNet.Core
         {
             if (IsServer)
             {
-                OnServerSceneLoaded(SNetScene.sceneName);
+                OnServerSceneLoaded(SNetScene.SceneName);
             }
 
             if (IsClient)
@@ -244,7 +241,7 @@ namespace SNet.Core
         public virtual void OnClientSceneLoaded()
         {
             var msg = new ReadyMessage();
-            NetworkRouter.SendByChannel(ChannelType.SNetReady, ReadyMessageHeader, msg);
+            NetworkRouter.SendByChannel(ChannelType.SNetReady, HeaderType.ReadyMessage, msg);
             Debug.Log("Client ready !");
         }
     }

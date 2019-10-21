@@ -6,7 +6,7 @@ namespace SNet.Core.Models
     [RequireComponent(typeof(SNetIdentity))]
     public abstract class SNetEntity : MonoBehaviour
     {
-        public bool IsLocalClient { get; private set; } // To know if we are going to Predict or Interpolation the entity
+        public bool IsLocalClientPredictive { get; private set; } // To know if we are going to Predict or Interpolation the entity
         protected static bool IsServer => SNetManager.IsServer;
         protected static bool IsClient => SNetManager.IsClient;
 
@@ -14,25 +14,29 @@ namespace SNet.Core.Models
 
         protected SNetIdentity Identity;
         protected int ComponentId;
-        protected bool Initialized;
 
         public void Initialize(int componentId)
         {
-            // IsLocalClient = true; // Get value from SNetManager
             // Get identity from registration
             Identity = GetComponent<SNetIdentity>();
+            
+            IsLocalClientPredictive = Identity.isPredictive & Identity.IsLocalClient;
 
             ComponentId = componentId;
 
             Setup();
-
-            Initialized = true;
         }
 
-        public abstract void Setup();
+        protected abstract void Setup();
 
         protected void NetworkRouterRegister(RouterCallback callback)
         {
+            if (Identity == null)
+            {
+                Debug.LogError("Cannot register callback because Entity is not initialized yet.");
+                return;
+            }
+            
             NetworkRouter.Register(InternalId, callback); // TODO change to NetworkRouter.Register(??identity??, callback);  (V)_(;,,;)_(V)
         }
 
@@ -40,8 +44,13 @@ namespace SNet.Core.Models
 
         protected void ServerBroadcastSerializable(byte[] data)
         {
-            if(Initialized)
-                NetworkRouter.Send(InternalId, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            if (Identity == null)
+            {
+                Debug.LogError("Cannot send data because Entity is not initialized yet.");
+                return;
+            }
+            
+            NetworkRouter.Send(InternalId, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnServerReceive(byte[] data);
@@ -56,8 +65,13 @@ namespace SNet.Core.Models
         
         protected void ClientSendSerializable(byte[] data)
         {
-            if(Initialized)
-                NetworkRouter.Send(InternalId, data); // TODO change to NetworkRouter.Send(identity.Id, data);
+            if (Identity == null)
+            {
+                Debug.LogError("Cannot send data because Entity is not initialized yet.");
+                return;
+            }
+  
+            NetworkRouter.Send(InternalId, data); // TODO change to NetworkRouter.Send(identity.Id, data);
         }
 
         //protected abstract void OnClientReceive(byte[] data);

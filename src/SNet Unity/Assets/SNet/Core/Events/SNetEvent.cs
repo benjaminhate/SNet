@@ -8,7 +8,7 @@ namespace SNet.Core.Events
         protected RouterCallback ClientReceive;
         protected RouterCallback ServerReceive;
 
-        public override void Setup()
+        protected override void Setup()
         {
             PreSetup();
 

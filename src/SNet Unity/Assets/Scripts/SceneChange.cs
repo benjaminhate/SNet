@@ -1,7 +1,5 @@
-﻿using SNet.Core;
-using SNet.Core.Models;
+﻿using SNet.Core.Models;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class SceneChange : MonoBehaviour
 {
